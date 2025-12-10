@@ -181,7 +181,7 @@ const Header = () => {
 
               {/* Mobile Login Link */}
               <Link
-                href="/Auth/login"
+                href="/auth/login"
                 className="py-3 px-2 hover:bg-gray-50 rounded-md font-medium mt-4 border-t border-gray-100"
                 onClick={toggleMobileMenu}
               >
