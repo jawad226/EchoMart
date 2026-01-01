@@ -1,10 +1,14 @@
-"use client";
-import React, { useState } from "react";
+'use client';
+
+import React, { useState, Suspense } from "react";
 import { MdHome } from "react-icons/md";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-const ResetPasswordPage = () => {
+export const dynamic = 'force-dynamic';
+
+
+const ResetPasswordContent = () => {
   const searchParams = useSearchParams();
   const token = searchParams.get("token"); // token from URL
 
@@ -98,6 +102,18 @@ const ResetPasswordPage = () => {
         </form>
       </div>
     </div>
+  );
+};
+
+const ResetPasswordPage = () => {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-800"></div>
+      </div>
+    }>
+      <ResetPasswordContent />
+    </Suspense>
   );
 };
 
