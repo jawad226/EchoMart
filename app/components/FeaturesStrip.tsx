@@ -19,7 +19,7 @@
 // //     ),
 // //   },
 // //   {
-// //     title: "Free shipping on orders over $50",
+// //     title: "Free shipping on orders over Rs 5,000",
 // //     icon: (
 // //       <svg
 // //         width="42"
@@ -116,7 +116,7 @@
 //     ),
 //   },
 //   {
-//     title: "Free shipping on orders over $50",
+//     title: "Free shipping on orders over Rs 5,000",
 //     icon: (
 //       <svg
 //         width="42"
@@ -216,7 +216,7 @@ const features = [
     color: "bg-purple-600",
   },
   {
-    title: "Free shipping on orders over $50",
+    title: "Free shipping on orders over Rs 5,000",
     icon: (
       <svg
         width="42"

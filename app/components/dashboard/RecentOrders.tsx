@@ -29,8 +29,8 @@ export default function RecentOrders() {
     <div className="bg-white/5 rounded-lg p-6 border border-white/10">
       <div className="flex items-center justify-between mb-4">
         <h3 className="font-semibold text-lg">Recent Orders</h3>
-        <Link 
-          href="/dashboard/orders" 
+        <Link
+          href="/dashboard/orders"
           className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
         >
           View All →
@@ -51,9 +51,18 @@ export default function RecentOrders() {
           <tbody>
             {recentOrders.map((order) => (
               <tr key={order.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                <td className="py-3 px-2 font-mono text-xs">{order.id}</td>
+                <td className="py-3 px-2 font-mono text-xs">{order.orderNumber || order.id}</td>
                 <td className="py-3 px-2">{order.customer}</td>
-                <td className="py-3 px-2">{order.product}</td>
+                <td className="py-3 px-2">
+                  {order.items && order.items.length > 0 ? (
+                    <span>
+                      {order.items[0].productName}
+                      {order.items.length > 1 && <span className="opacity-60"> +{order.items.length - 1} more</span>}
+                    </span>
+                  ) : (
+                    <span className="opacity-50">No items</span>
+                  )}
+                </td>
                 <td className="py-3 px-2">
                   <span className={`px-2 py-1 rounded-full text-xs border ${getStatusColor(order.status)}`}>
                     {order.status}

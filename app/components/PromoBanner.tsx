@@ -79,13 +79,13 @@ export default function PromoBanner() {
               priority
               className="object-cover"
             />
-            
+
             {/* Badge for mobile */}
             <div className="absolute top-4 right-4 bg-red-600 text-white text-sm font-semibold px-4 py-2 rounded-full rotate-[15deg] shadow-xl">
               Best Price
             </div>
           </div>
-          
+
           {/* Desktop: Clipped image */}
           <div className="hidden md:block w-full h-full relative"
             style={{
@@ -113,7 +113,7 @@ export default function PromoBanner() {
           <p className="text-gray-600 text-lg md:text-xl font-medium mb-2">Save up to</p>
 
           <h1 className="text-black text-5xl md:text-6xl lg:text-7xl font-extrabold mb-4">
-            $150
+            Rs 15,000
           </h1>
 
           <p className="text-gray-700 text-lg md:text-xl mb-3 max-w-md mx-auto md:mx-0">
@@ -122,8 +122,8 @@ export default function PromoBanner() {
 
           <p className="text-gray-400 text-sm mb-6 md:mb-8">Terms and conditions apply</p>
 
-          <Link 
-            href="/category/Earbuds" 
+          <Link
+            href="/category/Earbuds"
             className="px-8 md:px-10 py-3 md:py-4 bg-purple-600 hover:bg-purple-700 transition-all text-white rounded-full font-semibold text-base md:text-lg shadow-md hover:scale-105 active:scale-95 inline-block w-fit mx-auto md:mx-0"
           >
             Shop Now

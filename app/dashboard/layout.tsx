@@ -1,5 +1,6 @@
-import React from 'react';
 import '../globals.css';
+import ProtectedRoute from '../components/ProtectedRoute';
+import { DashboardProvider } from '../../context/DashboardContext';
 
 export default function DashboardLayout({
   children,
@@ -7,9 +8,11 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      {children}
-    </>
+    <ProtectedRoute allowedRoles={['admin']}>
+      <DashboardProvider>
+        {children}
+      </DashboardProvider>
+    </ProtectedRoute>
   );
 }
 

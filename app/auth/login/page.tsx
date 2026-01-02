@@ -2,8 +2,12 @@
 import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const LoginPage = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -24,8 +28,12 @@ const LoginPage = () => {
 
       if (!res.ok) setError(data.message || "Login failed.");
       else {
-        document.cookie = `token=${data.token}; path=/; max-age=${60 * 60 * 24}`;
-        window.location.href = "/dashboard";
+        login(data.access_token, data.user);
+        if (data.user.role === "admin") {
+          router.push("/dashboard");
+        } else {
+          router.push("/");
+        }
       }
     } catch (err) {
       console.error(err);

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
 import ConditionalLayout from "./components/ConditionalLayout";
 
 const geistSans = Geist({
@@ -24,13 +25,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-     <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <CartProvider>
-          <ConditionalLayout>
-            {children}
-          </ConditionalLayout>
-        </CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <ConditionalLayout>
+              {children}
+            </ConditionalLayout>
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

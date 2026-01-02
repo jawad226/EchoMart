@@ -8,7 +8,7 @@ import {
 } from "../../../context/DashboardContext";
 
 function ProductsContent() {
-  const { productsData, addProduct, updateProduct, deleteProduct } =
+  const { productsData, categoriesData, addProduct, updateProduct, deleteProduct } =
     useDashboard();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,8 +16,9 @@ function ProductsContent() {
 
   const [formData, setFormData] = useState({
     name: "",
-    category: "Earbuds",
+    categoryId: "",
     price: "",
+    originalPrice: "",
     stock: "",
     brand: "",
     image: "",
@@ -27,8 +28,9 @@ function ProductsContent() {
     setEditingProduct(null);
     setFormData({
       name: "",
-      category: "Earbuds",
+      categoryId: categoriesData[0]?.id.toString() || "",
       price: "",
+      originalPrice: "",
       stock: "",
       brand: "",
       image: "",
@@ -38,10 +40,13 @@ function ProductsContent() {
 
   const handleEdit = (product: any) => {
     setEditingProduct(product);
+    // Find the category id from the name
+    const category = categoriesData.find(c => c.name === product.category);
     setFormData({
       name: product.name,
-      category: product.category,
+      categoryId: category?.id.toString() || "",
       price: product.price.toString(),
+      originalPrice: product.originalPrice?.toString() || "",
       stock: product.stock.toString(),
       brand: product.brand || "",
       image: product.image || "",
@@ -49,41 +54,31 @@ function ProductsContent() {
     setIsModalOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const productData = {
-      id: editingProduct?.id || Date.now().toString(),
       name: formData.name,
-      category: formData.category,
+      categoryId: parseInt(formData.categoryId),
       price: parseFloat(formData.price),
+      originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
       stock: parseInt(formData.stock),
-      sold: editingProduct?.sold || 0,
       brand: formData.brand,
-      rating: editingProduct?.rating || 4.5,
-      image: formData.image, // ✅ IMAGE SAVED
+      image: formData.image,
     };
 
     if (editingProduct) {
-      updateProduct(editingProduct.id, productData);
+      await updateProduct(editingProduct.id, productData);
     } else {
-      addProduct(productData);
+      await addProduct(productData);
     }
 
     setIsModalOpen(false);
-    setFormData({
-      name: "",
-      category: "Earbuds",
-      price: "",
-      stock: "",
-      brand: "",
-      image: "",
-    });
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      deleteProduct(id);
+      await deleteProduct(id);
     }
   };
 
@@ -119,7 +114,7 @@ function ProductsContent() {
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-40 object-cover rounded mb-3"
+                  className="w-full h-40 object-contain rounded mb-3"
                 />
               )}
 
@@ -141,10 +136,14 @@ function ProductsContent() {
 
               <div className="space-y-2 mb-4">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="opacity-70">Price:</span>
-                  <span className="font-semibold">
+                  <span className="font-semibold text-lg text-blue-400">
                     Rs {product.price}
                   </span>
+                  {product.originalPrice && (
+                    <span className="text-xs opacity-50 line-through">
+                      Rs {product.originalPrice}
+                    </span>
+                  )}
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="opacity-70">Stock:</span>
@@ -214,23 +213,21 @@ function ProductsContent() {
                     Category
                   </label>
                   <select
-                    value={formData.category}
+                    value={formData.categoryId}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
-                        category: e.target.value,
+                        categoryId: e.target.value,
                       })
                     }
                     className="w-full bg-white border border-white rounded text-black px-3 py-2"
                   >
-                    <option value="ShopAll">Shop All</option>
-                    <option value="Earbuds">Earbuds</option>
-                    <option value="Adaptor">Adaptor</option>
-                    <option value="Headphones">Headphones</option>
-                    <option value="MobilePhoneCase">
-                      Mobile Phone Case
-                    </option>
-                    <option value="Sale">Sale</option>
+                    <option value="">Select Category</option>
+                    {categoriesData.map((cat) => (
+                      <option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -290,21 +287,38 @@ function ProductsContent() {
 
                   <div>
                     <label className="block text-sm opacity-70 mb-1">
-                      Stock
+                      Sale Price (Rs)
                     </label>
                     <input
                       type="number"
-                      required
-                      value={formData.stock}
+                      value={formData.originalPrice}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
-                          stock: e.target.value,
+                          originalPrice: e.target.value,
                         })
                       }
                       className="w-full bg-white text-black border border-white rounded px-3 py-2"
                     />
                   </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm opacity-70 mb-1">
+                    Stock Quantity
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={formData.stock}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        stock: e.target.value,
+                      })
+                    }
+                    className="w-full bg-white text-black border border-white rounded px-3 py-2"
+                  />
                 </div>
 
                 <div className="flex gap-3 pt-4">

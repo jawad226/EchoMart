@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import Sidebar from '../../components/dashboard/Sidebar';
 import { DashboardProvider, useDashboard } from '../../../context/DashboardContext';
 
@@ -8,8 +9,8 @@ function OrdersContent() {
   const { ordersData, updateOrder, deleteOrder } = useDashboard();
   const [filterStatus, setFilterStatus] = useState<string>('all');
 
-  const filteredOrders = filterStatus === 'all' 
-    ? ordersData 
+  const filteredOrders = filterStatus === 'all'
+    ? ordersData
     : ordersData.filter(order => order.status === filterStatus);
 
   const handleStatusChange = (id: string, newStatus: string) => {
@@ -64,11 +65,10 @@ function OrdersContent() {
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
-              className={`px-4 py-2 rounded-lg transition-colors ${
-                filterStatus === status
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white/5 hover:bg-white/10'
-              }`}
+              className={`px-4 py-2 rounded-lg transition-colors ${filterStatus === status
+                ? 'bg-blue-500 text-white'
+                : 'bg-white/5 hover:bg-white/10'
+                }`}
             >
               {status} ({count})
             </button>
@@ -94,7 +94,7 @@ function OrdersContent() {
               <tbody>
                 {filteredOrders.map((order) => (
                   <tr key={order.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="px-4 py-3 font-mono text-sm">{order.id}</td>
+                    <td className="px-4 py-3 font-mono text-sm">{order.orderNumber || order.id}</td>
                     <td className="px-4 py-3">
                       <div>
                         <div className="font-medium">{order.customer}</div>
@@ -103,8 +103,21 @@ function OrdersContent() {
                         )}
                       </div>
                     </td>
-                    <td className="px-4 py-3">{order.product}</td>
-                    <td className="px-4 py-3">{order.quantity}</td>
+                    <td className="px-4 py-3">
+                      <div className="space-y-1">
+                        {order.items && order.items.length > 0 ? (
+                          order.items.map((item, idx) => (
+                            <div key={idx} className="text-sm flex justify-between gap-4">
+                              <span>{item.productName}</span>
+                              <span className="opacity-60 text-xs">x{item.quantity}</span>
+                            </div>
+                          ))
+                        ) : (
+                          <span className="text-sm opacity-60">No items</span>
+                        )}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-center">{order.quantity}</td>
                     <td className="px-4 py-3 font-semibold">{order.amount}</td>
                     <td className="px-4 py-3">
                       <select
@@ -120,7 +133,13 @@ function OrdersContent() {
                       </select>
                     </td>
                     <td className="px-4 py-3 text-sm opacity-70">{order.date}</td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 flex gap-2">
+                      <Link
+                        href={`/dashboard/orders/${order.id}`}
+                        className="text-blue-400 hover:text-blue-300 text-sm"
+                      >
+                        View
+                      </Link>
                       <button
                         onClick={() => handleDelete(order.id)}
                         className="text-red-400 hover:text-red-300 text-sm"

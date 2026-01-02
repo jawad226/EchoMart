@@ -2,8 +2,12 @@
 import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
+  const { login } = useAuth();
+  const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -41,11 +45,10 @@ const RegisterPage = () => {
       if (!res.ok) setError(data.message || "Registration failed.");
       else {
         setSuccess("Account created successfully!");
-        setName("");
-        setEmail("");
-        setPhone("");
-        setPassword("");
-        setConfirmPassword("");
+        login(data.access_token, data.user);
+        setTimeout(() => {
+          router.push("/");
+        }, 1500);
       }
     } catch (err) {
       console.error(err);
