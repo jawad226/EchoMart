@@ -15,7 +15,7 @@ const Header = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch("http://localhost:4000/categories");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/categories`);
         if (res.ok) {
           const data = await res.json();
           setCategories(data);

@@ -25,7 +25,7 @@ const OnSale = () => {
   useEffect(() => {
     const fetchOnSale = async () => {
       try {
-        const res = await fetch("http://localhost:4000/products");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`);
         if (res.ok) {
           const data = await res.json();
           const saleItems = data

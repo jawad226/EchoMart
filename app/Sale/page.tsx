@@ -22,7 +22,7 @@ export default function SalePage() {
   useEffect(() => {
     const fetchSaleProducts = async () => {
       try {
-        const res = await fetch("http://localhost:4000/products");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`);
         const data: Product[] = await res.json();
         // Only show products where originalPrice > price
         const onSale = data.filter(p => p.originalPrice && p.originalPrice > p.price);

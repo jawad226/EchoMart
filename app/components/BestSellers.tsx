@@ -30,7 +30,7 @@ const BestSellers = () => {
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
-        const res = await fetch("http://localhost:4000/products");
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`);
         if (res.ok) {
           const data = await res.json();
           // Map backend data to Home page format
@@ -120,8 +120,8 @@ const BestSellers = () => {
                     <button
                       onClick={() => toggleWishlist(product.id)}
                       className={`p-2 rounded-full shadow-lg backdrop-blur-sm transition-all ${isInWishlist
-                          ? 'bg-red-500 text-white'
-                          : 'bg-white/90 text-gray-700 hover:bg-red-500 hover:text-white'
+                        ? 'bg-red-500 text-white'
+                        : 'bg-white/90 text-gray-700 hover:bg-red-500 hover:text-white'
                         }`}
                     >
                       <Heart size={18} fill={isInWishlist ? "currentColor" : "none"} />

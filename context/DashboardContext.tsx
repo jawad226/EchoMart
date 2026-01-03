@@ -106,7 +106,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
 
       // Fetch Stats
-      const statsRes = await fetch("http://localhost:4000/stats/dashboard", {
+      const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/stats/dashboard`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (statsRes.ok) {
@@ -118,14 +118,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Fetch Categories
-      const catRes = await fetch("http://localhost:4000/categories");
+      const catRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/categories`);
       if (catRes.ok) {
         const categories = await catRes.json();
         setCategoriesData(categories);
       }
 
       // Fetch Products
-      const productsRes = await fetch("http://localhost:4000/products");
+      const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`);
       if (productsRes.ok) {
         const products = await productsRes.json();
         const mappedProducts = products.map((p: any) => ({
@@ -136,7 +136,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Fetch Orders
-      const ordersRes = await fetch("http://localhost:4000/orders");
+      const ordersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/orders`);
       let orders = [];
       if (ordersRes.ok) {
         orders = await ordersRes.json();
@@ -162,7 +162,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
       // Fetch Customers (Users)
       console.log('Fetching customers...');
-      const usersRes = await fetch("http://localhost:4000/user", {
+      const usersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/user`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (usersRes.ok) {
@@ -202,7 +202,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Product actions - Persistence Implementation
   const addProduct = async (product: any) => {
     try {
-      const res = await fetch("http://localhost:4000/products", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -219,7 +219,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const updateProduct = async (id: string | number, updates: any) => {
     try {
       console.log('Updating product:', id, updates);
-      const res = await fetch(`http://localhost:4000/products/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -241,7 +241,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   const deleteProduct = async (id: string | number) => {
     try {
-      const res = await fetch(`http://localhost:4000/products/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -254,7 +254,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Category actions
   const addCategory = async (category: any) => {
     try {
-      const res = await fetch("http://localhost:4000/categories", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/categories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -270,7 +270,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   const deleteCategory = async (id: string | number) => {
     try {
-      const res = await fetch(`http://localhost:4000/categories/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/categories/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -283,7 +283,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Order actions
   const addOrder = async (order: any) => {
     try {
-      const res = await fetch("http://localhost:4000/orders", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order),
@@ -300,7 +300,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
       // Call backend API if status is being updated
       if (updates.status) {
-        const res = await fetch(`http://localhost:4000/orders/${id}/status`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/orders/${id}/status`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

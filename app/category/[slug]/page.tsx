@@ -32,13 +32,13 @@ export default function CategoryPage() {
         const fetchCategoryAndProducts = async () => {
             try {
                 // Fetch categories to get the name
-                const catRes = await fetch("http://localhost:4000/categories");
+                const catRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/categories`);
                 const categories: Category[] = await catRes.json();
                 const currentCat = categories.find(c => c.slug === slug);
                 if (currentCat) setCategoryName(currentCat.name);
 
                 // Fetch all products and filter by category slug
-                const prodRes = await fetch("http://localhost:4000/products");
+                const prodRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/products`);
                 const allProducts: Product[] = await prodRes.json();
                 const filtered = allProducts.filter(p => p.category.slug === slug);
                 setProducts(filtered);

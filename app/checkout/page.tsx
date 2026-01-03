@@ -45,7 +45,7 @@ export default function CheckoutPage() {
         shippingAddress,
       };
 
-      const res = await fetch("http://localhost:4000/orders", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
