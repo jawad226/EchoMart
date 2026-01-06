@@ -7,12 +7,16 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import ProtectedRoute from '../components/ProtectedRoute';
 
+import SuccessModal from '../components/SuccessModal';
+
 export default function CheckoutPage() {
   const { cart, clearCart } = useCart();
   const { token, user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [lastOrderNumber, setLastOrderNumber] = useState("");
 
   const handleCompleteOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +47,7 @@ export default function CheckoutPage() {
         })),
         paymentMethod: selectedPayment === 'cod' ? 'COD' : 'Online',
         shippingAddress,
+        customerId: user?.id, // Ensure customerId is passed
       };
 
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app"}/orders`, {
@@ -60,9 +65,14 @@ export default function CheckoutPage() {
       }
 
       const data = await res.json();
-      localStorage.setItem('lastOrderId', data.orderNumber);
+      const orderNum = data.orderNumber || `#${data.id}`;
+      setLastOrderNumber(orderNum);
+      localStorage.setItem('lastOrderId', orderNum);
       clearCart();
-      router.push("/order/success");
+
+      // Open success modal instead of immediate redirect
+      setIsSuccessModalOpen(true);
+
     } catch (err: any) {
       console.error(err);
       setError(err.message || "An error occurred while placing your order.");
@@ -98,6 +108,14 @@ export default function CheckoutPage() {
   return (
     <ProtectedRoute>
       <div className="w-full min-h-screen bg-white ">
+
+        {/* Success Modal */}
+        <SuccessModal
+          isOpen={isSuccessModalOpen}
+          onClose={() => setIsSuccessModalOpen(false)}
+          orderNumber={lastOrderNumber}
+        />
+
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 p-6 md:p-10">
 
           <form onSubmit={handleCompleteOrder} className="max-w-2xl mx-auto p-4 md:p-6 overflow-y-auto border-r ">
