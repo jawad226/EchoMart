@@ -2,7 +2,9 @@
 
 import { Search, Heart, ShoppingCart, User, Menu, X } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
+import AuthModal from "./AuthModal";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
 
@@ -11,6 +13,8 @@ const Header = () => {
   const { cart, toggleCart } = useCart();
   const { user, logout } = useAuth();
   const [categories, setCategories] = useState<{ name: string; slug: string }[]>([]);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [authView, setAuthView] = useState<"login" | "register" | "forgot-password">("login");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -44,8 +48,15 @@ const Header = () => {
             <Menu className="w-6 h-6" />
           </button>
 
-          <Link href="/" className="text-xl sm:text-2xl font-semibold text-gray-900">
-            Looks Shop
+          <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
+            <Image
+              src="https://res.cloudinary.com/dcfzqdk58/image/upload/v1767718693/logo_a7mnqm.png"
+              alt="Looks Shop Logo"
+              width={200}
+              height={40}
+              className="h-8 md:h-10 w-auto object-contain"
+              priority
+            />
           </Link>
         </div>
 
@@ -62,7 +73,12 @@ const Header = () => {
                 )}
               </div>
             ) : (
-              <Link href="/auth/login" className="hidden sm:inline text-sm"> <User className="w-5 h-5" /></Link>
+                <button
+                  onClick={() => { setAuthView("login"); setIsAuthModalOpen(true); }}
+                  className="hidden sm:inline text-sm hover:text-black transition"
+                >
+                  <User className="w-5 h-5" />
+                </button>
             )}
           </div>
           <Heart className="w-5 h-5 cursor-pointer hover:text-black transition" />
@@ -134,18 +150,23 @@ const Header = () => {
                   Logout ({user.name})
                 </button>
               ) : (
-                <Link
-                  href="/auth/login"
-                  className="py-3 px-2 hover:bg-gray-50 rounded-md font-medium mt-4 border-t border-gray-100"
-                  onClick={toggleMobileMenu}
+                  <button
+                    onClick={() => { setAuthView("login"); setIsAuthModalOpen(true); toggleMobileMenu(); }}
+                    className="py-3 px-2 text-left hover:bg-gray-50 rounded-md font-medium mt-4 border-t border-gray-100"
                 >
                   Log In
-                </Link>
+                  </button>
               )}
             </nav>
           </div>
         </div>
       )}
+
+      <AuthModal
+        isOpen={isAuthModalOpen}
+        onClose={() => setIsAuthModalOpen(false)}
+        initialView={authView}
+      />
     </header>
   );
 };

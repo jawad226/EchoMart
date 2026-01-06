@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
+import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
@@ -13,6 +14,8 @@ const RegisterPage = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
@@ -47,7 +50,7 @@ const RegisterPage = () => {
         setSuccess("Account created successfully!");
         login(data.access_token, data.user);
         setTimeout(() => {
-          router.push("/");
+          router.push("/auth/login");
         }, 1500);
       }
     } catch (err) {
@@ -80,8 +83,38 @@ const RegisterPage = () => {
           <input type="text" placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} className="border p-3 rounded-xl" />
           <input type="email" placeholder="Email" value={email} onChange={e => setEmail(e.target.value)} className="border p-3 rounded-xl" />
           <input type="tel" placeholder="Phone" value={phone} onChange={e => setPhone(e.target.value)} className="border p-3 rounded-xl" />
-          <input type="password" placeholder="Password" value={password} onChange={e => setPassword(e.target.value)} className="border p-3 rounded-xl" />
-          <input type="password" placeholder="Confirm Password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="border p-3 rounded-xl" />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className="border p-3 rounded-xl w-full pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)}
+              className="border p-3 rounded-xl w-full pr-10"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+            >
+              {showConfirmPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
 
           <button type="submit" disabled={loading} className="bg-blue-800 text-white py-3 rounded-xl font-semibold disabled:opacity-50">
             {loading ? "Registering..." : "Register"}
