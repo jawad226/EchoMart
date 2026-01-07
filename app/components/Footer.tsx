@@ -42,12 +42,12 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-semibold mb-4">Shop</h3>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/shop-all" className="hover:text-black">Shop All</Link></li>
-            <li><Link href="/computers" className="hover:text-black">Earbuds</Link></li>
-            <li><Link href="/tablets" className="hover:text-black">Adaptor</Link></li>
-            <li><Link href="/audio" className="hover:text-black">Headphones</Link></li>
-            <li><Link href="/mobile" className="hover:text-black">Mobile Phone Case</Link></li>
-            <li><Link href="/sale" className="hover:text-black">Sale</Link></li>
+            <li><Link href="/Shop-all" className="hover:text-black">Shop All</Link></li>
+            <li><Link href="/category/Earbuds" className="hover:text-black">Earbuds</Link></li>
+            <li><Link href="/category/Adaptor" className="hover:text-black">Adaptor</Link></li>
+            <li><Link href="/category/Headphones" className="hover:text-black">Headphones</Link></li>
+            <li><Link href="/category/Mobile-Phone-Case" className="hover:text-black">Mobile Phone Case</Link></li>
+            <li><Link href="/Sale" className="hover:text-black">Sale</Link></li>
           </ul>
         </div>
 
