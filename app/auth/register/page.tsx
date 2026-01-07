@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+
 import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
-  const { login } = useAuth();
+
   const router = useRouter();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -48,7 +48,6 @@ const RegisterPage = () => {
       if (!res.ok) setError(data.message || "Registration failed.");
       else {
         setSuccess("Account created successfully!");
-        login(data.access_token, data.user);
         setTimeout(() => {
           router.push("/auth/login");
         }, 1500);
