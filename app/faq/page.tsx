@@ -1,38 +1,72 @@
 "use client";
 
-import React, { useState } from "react";
-import { ChevronDown, HelpCircle, MessageCircle, Send } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ChevronDown, HelpCircle, MessageCircle, Send, Loader2 } from "lucide-react";
+
+interface FaqItem {
+  category: string;
+  question: string;
+  answer: string;
+}
 
 export default function FAQPage() {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const faqs = [
+  const staticFaqs = [
     {
       category: "General",
-      q: "What is Looks Shop?",
-      a: "Looks Shop is a premier e-commerce platform dedicated to providing high-quality electronics, accessories, and tech lifestyle products."
+      question: "What is Looks Shop?",
+      answer: "Looks Shop is a premier e-commerce platform dedicated to providing high-quality electronics, accessories, and tech lifestyle products."
     },
     {
       category: "Orders",
-      q: "Can I change my order after it's placed?",
-      a: "Orders can be modified within 2 hours of placement. Please contact our support team immediately if you need to make changes."
+      question: "Can I change my order after it's placed?",
+      answer: "Orders can be modified within 2 hours of placement. Please contact our support team immediately if you need to make changes."
     },
     {
       category: "Shipping",
-      q: "How long does shipping take?",
-      a: "Domestic orders typically take 3-5 business days. International orders can take 7-14 business days depending on the region."
+      question: "How long does shipping take?",
+      answer: "Domestic orders typically take 3-5 business days. International orders can take 7-14 business days depending on the region."
     },
     {
       category: "Returns",
-      q: "What if I receive a damaged item?",
-      a: "If your item arrives damaged, please take a photo and contact us within 48 hours for a free replacement or full refund."
+      question: "What if I receive a damaged item?",
+      answer: "If your item arrives damaged, please take a photo and contact us within 48 hours for a free replacement or full refund."
     },
     {
       category: "Payments",
-      q: "What payment methods do you accept?",
-      a: "We accept all major credit cards (Visa, Mastercard, Amex), PayPal, and various local payment options."
+      question: "What payment methods do you accept?",
+      answer: "We accept all major credit cards (Visa, Mastercard, Amex), PayPal, and various local payment options."
     }
   ];
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app";
+        const res = await fetch(`${apiUrl}/faq`);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.length > 0) {
+            setFaqs(data);
+          } else {
+            setFaqs(staticFaqs);
+          }
+        } else {
+          setFaqs(staticFaqs);
+        }
+      } catch (error) {
+        console.error("Failed to fetch FAQs:", error);
+        setFaqs(staticFaqs);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50 py-20 px-6">
@@ -48,31 +82,38 @@ export default function FAQPage() {
           </p>
         </div>
 
-        <div className="space-y-4 mb-20">
-          {faqs.map((faq, i) => (
-            <div key={i} className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-              <button
-                onClick={() => setActiveFaq(activeFaq === i ? null : index)}
-                className="w-full flex items-center justify-between p-8 text-left group"
-              >
-                <div>
-                  <span className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 block">{faq.category}</span>
-                  <span className="text-lg font-bold text-gray-900 group-hover:text-blue-800 transition-colors">{faq.q}</span>
-                </div>
-                <div className={`p-2 rounded-xl transition-all duration-300 ${activeFaq === i ? "bg-blue-600 text-white rotate-180" : "bg-gray-50 text-gray-400"}`}>
-                  <ChevronDown size={20} />
-                </div>
-              </button>
-              <div
-                className={`transition-all duration-300 ease-in-out overflow-hidden ${activeFaq === i ? "max-h-60" : "max-h-0"}`}
-              >
-                <div className="p-8 pt-0 text-gray-600 leading-relaxed text-lg border-t border-gray-50 mt-4">
-                  {faq.a}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
+            <p className="text-gray-500 font-medium tracking-wide">Loading FAQs...</p>
+          </div>
+        ) : (
+          <div className="space-y-4 mb-20 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {faqs.map((faq, i) => (
+              <div key={i} className="bg-white rounded-[2rem] border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <button
+                  onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                  className="w-full flex items-center justify-between p-8 text-left group"
+                >
+                  <div>
+                    <span className="text-xs font-bold text-blue-600 uppercase tracking-widest mb-2 block">{faq.category}</span>
+                    <span className="text-lg font-bold text-gray-900 group-hover:text-blue-800 transition-colors">{faq.question}</span>
+                  </div>
+                  <div className={`p-2 rounded-xl transition-all duration-300 ${activeFaq === i ? "bg-blue-600 text-white rotate-180" : "bg-gray-50 text-gray-400"}`}>
+                    <ChevronDown size={20} />
+                  </div>
+                </button>
+                <div
+                  className={`transition-all duration-300 ease-in-out overflow-hidden ${activeFaq === i ? "max-h-60" : "max-h-0"}`}
+                >
+                  <div className="p-8 pt-0 text-gray-600 leading-relaxed text-lg border-t border-gray-50 mt-4">
+                    {faq.answer}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
 
         {/* Contact CTA */}
         <div className="bg-gray-900 rounded-[3rem] p-12 text-center text-white relative overflow-hidden">

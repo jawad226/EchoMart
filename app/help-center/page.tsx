@@ -1,11 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
-import { Search, ChevronDown, Package, RotateCcw, CreditCard, User, ShieldCheck, Mail, MessageCircle } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Search, ChevronDown, Package, RotateCcw, CreditCard, User, ShieldCheck, Mail, MessageCircle, Loader2 } from "lucide-react";
+
+interface FaqItem {
+  category: string;
+  question: string;
+  answer: string;
+}
 
 const HelpCenterPage = () => {
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [faqs, setFaqs] = useState<FaqItem[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const categories = [
     { icon: <Package size={24} />, title: "Orders", desc: "Track, change, or cancel orders" },
@@ -16,28 +24,61 @@ const HelpCenterPage = () => {
     { icon: <Mail size={24} />, title: "Contact", desc: "Direct support options" },
   ];
 
-  const faqs = [
+  const staticFaqs = [
     {
-      q: "How can I track my order?",
-      a: "Once your order is shipped, you will receive an email with a tracking number and a link to track your package in real-time."
+      category: "Orders",
+      question: "How can I track my order?",
+      answer: "Once your order is shipped, you will receive an email with a tracking number and a link to track your package in real-time."
     },
     {
-      q: "What is your return policy?",
-      a: "We offer a 30-day hassle-free return policy for all unused items in their original packaging."
+      category: "Returns",
+      question: "What is your return policy?",
+      answer: "We offer a 30-day hassle-free return policy for all unused items in their original packaging."
     },
     {
-      q: "Do you ship internationally?",
-      a: "Yes, we ship to over 50 countries worldwide. Shipping costs and delivery times vary by location."
+      category: "Shipping",
+      question: "Do you ship internationally?",
+      answer: "Yes, we ship to over 50 countries worldwide. Shipping costs and delivery times vary by location."
     },
     {
-      q: "How do I change my shipping address?",
-      a: "You can change your shipping address within 2 hours of placing an order by contacting our support team or visiting your account dashboard."
+      category: "Orders",
+      question: "How do I change my shipping address?",
+      answer: "You can change your shipping address within 2 hours of placing an order by contacting our support team or visiting your account dashboard."
     },
     {
-      q: "Is my payment information secure?",
-      a: "Absolutely. We use industry-standard encryption and professional payment gateways to ensure your data is always protected."
+      category: "Payments",
+      question: "Is my payment information secure?",
+      answer: "Absolutely. We use industry-standard encryption and professional payment gateways to ensure your data is always protected."
     }
   ];
+
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app";
+        const res = await fetch(`${apiUrl}/faq`);
+        if (res.ok) {
+          const data = await res.json();
+          setFaqs(data.length > 0 ? data : staticFaqs);
+        } else {
+          setFaqs(staticFaqs);
+        }
+      } catch (error) {
+        console.error("Failed to fetch FAQs:", error);
+        setFaqs(staticFaqs);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
+
+  const filteredFaqs = faqs.filter(faq =>
+    faq.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    faq.answer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    faq.category.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const toggleFaq = (index: number) => {
     setActiveFaq(activeFaq === index ? null : index);
@@ -64,7 +105,7 @@ const HelpCenterPage = () => {
 
       <div className="max-w-6xl mx-auto px-6 -mt-16">
         {/* Category Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-20 animate-in fade-in duration-700">
           {categories.map((cat, i) => (
             <div key={i} className="bg-white p-8 rounded-[2rem] shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer group hover:-translate-y-1">
               <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -80,34 +121,55 @@ const HelpCenterPage = () => {
           {/* FAQ Section */}
           <div className="lg:col-span-2">
             <h2 className="text-3xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
-            <div className="space-y-4">
-              {faqs.map((faq, i) => (
-                <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
-                  <button
-                    onClick={() => toggleFaq(i)}
-                    className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
-                  >
-                    <span className="font-semibold text-gray-900">{faq.q}</span>
-                    <ChevronDown
-                      size={20}
-                      className={`text-gray-400 transition-transform duration-300 ${activeFaq === i ? "rotate-180 text-blue-600" : ""}`}
-                    />
-                  </button>
-                  <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${activeFaq === i ? "max-h-40 border-t border-gray-50" : "max-h-0"}`}
-                  >
-                    <div className="p-6 text-gray-600 leading-relaxed">
-                      {faq.a}
+
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-10 gap-4 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+                <p className="text-gray-500 font-medium">Loading FAQs...</p>
+              </div>
+            ) : filteredFaqs.length > 0 ? (
+              <div className="space-y-4 animate-in slide-in-from-bottom-4 duration-500">
+                {filteredFaqs.map((faq, i) => (
+                  <div key={i} className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                    <button
+                      onClick={() => toggleFaq(i)}
+                      className="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">{faq.category}</span>
+                        <span className="font-semibold text-gray-900">{faq.question}</span>
+                      </div>
+                      <ChevronDown
+                        size={20}
+                        className={`text-gray-400 transition-transform duration-300 ${activeFaq === i ? "rotate-180 text-blue-600" : ""}`}
+                      />
+                    </button>
+                    <div
+                      className={`transition-all duration-300 ease-in-out overflow-hidden ${activeFaq === i ? "max-h-60 border-t border-gray-50" : "max-h-0"}`}
+                    >
+                      <div className="p-6 text-gray-600 leading-relaxed">
+                        {faq.answer}
+                      </div>
                     </div>
                   </div>
+                ))}
                 </div>
-              ))}
-            </div>
+            ) : (
+              <div className="bg-white rounded-3xl p-12 text-center border border-dashed border-gray-200">
+                <p className="text-gray-500 text-lg">No FAQs found matching your search.</p>
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4 text-blue-600 font-bold hover:underline"
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Side Support Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-blue-800 rounded-[2.5rem] p-8 text-white relative overflow-hidden sticky top-8">
+            <div className="bg-blue-800 rounded-[2.5rem] p-8 text-white relative overflow-hidden sticky top-8 shadow-xl shadow-blue-900/10">
               <div className="relative z-10">
                 <h3 className="text-2xl font-bold mb-4">Still need help?</h3>
                 <p className="text-blue-100 mb-8 leading-relaxed">
