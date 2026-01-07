@@ -45,7 +45,7 @@ export default function FAQPage() {
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production.up.railway.app";
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app";
         const res = await fetch(`${apiUrl}/faq`);
         if (res.ok) {
           const data = await res.json();
