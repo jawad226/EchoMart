@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useAuth } from './AuthContext';
+import { message } from 'antd';
 
 // Types
 export interface OrderItemData {
@@ -72,14 +73,14 @@ interface DashboardContextType {
 
   // Actions
   refreshData: () => Promise<void>;
-  addOrder: (order: any) => Promise<void>;
-  updateOrder: (id: string, order: Partial<Order>) => Promise<void>;
-  deleteOrder: (id: string) => Promise<void>;
-  addProduct: (product: any) => Promise<void>;
-  updateProduct: (id: string | number, product: any) => Promise<void>;
-  deleteProduct: (id: string | number) => Promise<void>;
-  addCategory: (category: any) => Promise<void>;
-  deleteCategory: (id: string | number) => Promise<void>;
+  addOrder: (order: any) => Promise<boolean>;
+  updateOrder: (id: string, order: Partial<Order>) => Promise<boolean>;
+  deleteOrder: (id: string) => Promise<boolean>;
+  addProduct: (product: any) => Promise<boolean>;
+  updateProduct: (id: string | number, product: any) => Promise<boolean>;
+  deleteProduct: (id: string | number) => Promise<boolean>;
+  addCategory: (category: any) => Promise<boolean>;
+  deleteCategory: (id: string | number) => Promise<boolean>;
   addCustomer: (customer: any) => void;
   updateCustomer: (id: string, customer: any) => void;
   deleteCustomer: (id: string) => void;
@@ -210,9 +211,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         },
         body: JSON.stringify(product),
       });
-      if (res.ok) await refreshData();
+      if (res.ok) {
+        await refreshData();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Failed to add product:", err);
+      return false;
     }
   };
 
@@ -230,12 +236,15 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       if (res.ok) {
         console.log('Update successful');
         await refreshData();
+        return true;
       } else {
         const errData = await res.json();
         console.error('Update failed:', errData);
+        return false;
       }
     } catch (err) {
       console.error("Failed to update product:", err);
+      return false;
     }
   };
 
@@ -245,9 +254,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
-      if (res.ok) await refreshData();
+      if (res.ok) {
+        await refreshData();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Failed to delete product:", err);
+      return false;
     }
   };
 
@@ -262,9 +276,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         },
         body: JSON.stringify(category),
       });
-      if (res.ok) await refreshData();
+      if (res.ok) {
+        await refreshData();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Failed to add category:", err);
+      return false;
     }
   };
 
@@ -274,9 +293,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
-      if (res.ok) await refreshData();
+      if (res.ok) {
+        await refreshData();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Failed to delete category:", err);
+      return false;
     }
   };
 
@@ -288,9 +312,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order),
       });
-      if (res.ok) await refreshData();
+      if (res.ok) {
+        await refreshData();
+        return true;
+      }
+      return false;
     } catch (err) {
       console.error("Failed to add order:", err);
+      return false;
     }
   };
 
@@ -312,23 +341,26 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         if (!res.ok) {
           const errData = await res.json();
           console.error('Failed to update order status:', errData);
-          alert(`Failed to update status: ${errData.message || 'Unknown error'}`);
-          return;
+          message.error(`Failed to update status: ${errData.message || 'Unknown error'}`);
+          return false;
         }
       }
 
       // Optimistic update + Refresh
       setOrdersData(ordersData.map(order => order.id === id ? { ...order, ...updates } : order));
       await refreshData();
+      return true;
     } catch (err) {
       console.error("Failed to update order:", err);
-      alert("Failed to update order. Check console for details.");
+      message.error("Failed to update order. Check console for details.");
+      return false;
     }
   };
 
   const deleteOrder = async (id: string) => {
     // Backend delete for orders not fully implemented yet
     setOrdersData(ordersData.filter(order => order.id !== id));
+    return true;
   };
 
   // Customer actions (Stubs)

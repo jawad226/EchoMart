@@ -6,6 +6,7 @@ import {
   DashboardProvider,
   useDashboard,
 } from "../../../context/DashboardContext";
+import { message } from "antd";
 
 function ProductsContent() {
   const { productsData, categoriesData, addProduct, updateProduct, deleteProduct } =
@@ -13,6 +14,7 @@ function ProductsContent() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -57,28 +59,51 @@ function ProductsContent() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!formData.categoryId) {
+      message.error("Please select a category.");
+      return;
+    }
+
     const productData = {
       name: formData.name,
       categoryId: parseInt(formData.categoryId),
-      price: parseFloat(formData.price),
+      price: parseFloat(formData.price) || 0,
       originalPrice: formData.originalPrice ? parseFloat(formData.originalPrice) : null,
-      stock: parseInt(formData.stock),
+      stock: parseInt(formData.stock) || 0,
       brand: formData.brand,
       image: formData.image,
     };
 
+    setLoading(true);
+    let success = false;
     if (editingProduct) {
-      await updateProduct(editingProduct.id, productData);
+      success = await updateProduct(editingProduct.id, productData);
+      if (success) {
+        message.success("Product updated successfully!");
+      } else {
+        message.error("Failed to update product.");
+      }
     } else {
-      await addProduct(productData);
+      success = await addProduct(productData);
+      if (success) {
+        message.success("Product added successfully!");
+      } else {
+        message.error("Failed to add product.");
+      }
     }
 
-    setIsModalOpen(false);
+    setLoading(false);
+    if (success) setIsModalOpen(false);
   };
 
   const handleDelete = async (id: number) => {
     if (confirm("Are you sure you want to delete this product?")) {
-      await deleteProduct(id);
+      const success = await deleteProduct(id);
+      if (success) {
+        message.success("Product deleted successfully!");
+      } else {
+        message.error("Failed to delete product.");
+      }
     }
   };
 
@@ -324,9 +349,17 @@ function ProductsContent() {
                 <div className="flex gap-3 pt-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-500 hover:bg-blue-600 px-4 py-2 rounded"
+                    disabled={loading}
+                    className={`flex-1 ${loading ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600'} px-4 py-2 rounded transition-all flex items-center justify-center gap-2`}
                   >
-                    {editingProduct ? "Update" : "Add"} Product
+                    {loading ? (
+                      <>
+                        <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+                        {editingProduct ? "Updating..." : "Adding..."}
+                      </>
+                    ) : (
+                      <>{editingProduct ? "Update" : "Add"} Product</>
+                    )}
                   </button>
                   <button
                     type="button"

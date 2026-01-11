@@ -3,11 +3,13 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/dashboard/Sidebar';
 import { DashboardProvider, useDashboard } from '../../../context/DashboardContext';
+import { message } from 'antd';
 
 function InventoryContent() {
   const { productsData, updateProduct } = useDashboard();
   const [filterCategory, setFilterCategory] = useState<string>('all');
   const [lowStockFilter, setLowStockFilter] = useState(false);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const categories = ['all', 'Earbuds', 'Adaptor', 'Headphones', 'MobilePhoneCase'];
 
@@ -21,8 +23,15 @@ function InventoryContent() {
     filteredProducts = filteredProducts.filter(p => p.stock < 20);
   }
 
-  const handleStockUpdate = (id: string, newStock: number) => {
-    updateProduct(id, { stock: newStock });
+  const handleStockUpdate = async (id: string, newStock: number) => {
+    setUpdatingId(id);
+    const success = await updateProduct(id, { stock: newStock });
+    if (success) {
+      message.success("Stock updated!");
+    } else {
+      message.error("Failed to update stock.");
+    }
+    setUpdatingId(null);
   };
 
   const totalValue = productsData.reduce((sum, p) => sum + (p.price * p.stock), 0);
@@ -125,9 +134,10 @@ function InventoryContent() {
                         <input
                           type="number"
                           min="0"
+                          disabled={updatingId === product.id}
                           value={product.stock}
                           onChange={(e) => handleStockUpdate(product.id, parseInt(e.target.value) || 0)}
-                          className="w-20 bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
+                          className={`w-20 bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500 ${updatingId === product.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                         />
                       </td>
                       <td className="px-4 py-3">
@@ -146,14 +156,16 @@ function InventoryContent() {
                       </td>
                       <td className="px-4 py-3">
                         <button
+                          disabled={updatingId === product.id}
                           onClick={() => handleStockUpdate(product.id, product.stock + 10)}
-                          className="text-blue-400 hover:text-blue-300 text-sm mr-2"
+                          className={`text-blue-400 hover:text-blue-300 text-sm mr-2 ${updatingId === product.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           +10
                         </button>
                         <button
+                          disabled={updatingId === product.id}
                           onClick={() => handleStockUpdate(product.id, Math.max(0, product.stock - 10))}
-                          className="text-red-400 hover:text-red-300 text-sm"
+                          className={`text-red-400 hover:text-red-300 text-sm ${updatingId === product.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
                           -10
                         </button>

@@ -4,22 +4,38 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import Sidebar from '../../components/dashboard/Sidebar';
 import { DashboardProvider, useDashboard } from '../../../context/DashboardContext';
+import { message } from 'antd';
 
 function OrdersContent() {
   const { ordersData, updateOrder, deleteOrder } = useDashboard();
   const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const filteredOrders = filterStatus === 'all'
     ? ordersData
     : ordersData.filter(order => order.status === filterStatus);
 
-  const handleStatusChange = (id: string, newStatus: string) => {
-    updateOrder(id, { status: newStatus as any });
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    setUpdatingId(id);
+    const success = await updateOrder(id, { status: newStatus as any });
+    if (success) {
+      message.success("Order status updated!");
+    } else {
+      message.error("Failed to update order status.");
+    }
+    setUpdatingId(null);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this order?')) {
-      deleteOrder(id);
+      setUpdatingId(id);
+      const success = await deleteOrder(id);
+      if (success) {
+        message.success("Order deleted!");
+      } else {
+        message.error("Failed to delete order.");
+      }
+      setUpdatingId(null);
     }
   };
 
@@ -121,9 +137,10 @@ function OrdersContent() {
                     <td className="px-4 py-3 font-semibold">{order.amount}</td>
                     <td className="px-4 py-3">
                       <select
+                        disabled={updatingId === order.id}
                         value={order.status}
                         onChange={(e) => handleStatusChange(order.id, e.target.value)}
-                        className={`px-2 py-1 rounded text-xs border ${getStatusColor(order.status)} bg-transparent`}
+                        className={`px-2 py-1 rounded text-xs border ${getStatusColor(order.status)} bg-transparent ${updatingId === order.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         <option value="Pending">Pending</option>
                         <option value="Paid">Paid</option>
@@ -141,8 +158,9 @@ function OrdersContent() {
                         View
                       </Link>
                       <button
+                        disabled={updatingId === order.id}
                         onClick={() => handleDelete(order.id)}
-                        className="text-red-400 hover:text-red-300 text-sm"
+                        className={`text-red-400 hover:text-red-300 text-sm ${updatingId === order.id ? 'opacity-50 cursor-not-allowed' : ''}`}
                       >
                         Delete
                       </button>
