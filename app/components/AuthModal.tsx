@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { Eye, EyeOff, X } from "lucide-react";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { MdHome } from "react-icons/md";
+import toast from "react-hot-toast";
+
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -30,14 +32,10 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
 
   // Status States
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     if (isOpen) {
       setView(initialView);
-      setError("");
-      setSuccess("");
     }
     
     // Prevent scrolling when modal is open
@@ -53,8 +51,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
   }, [isOpen, initialView]);
 
   const resetForm = () => {
-    setError("");
-    setSuccess("");
     setEmail("");
     setPassword("");
     setConfirmPassword("");
@@ -65,7 +61,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/login`, {
@@ -75,15 +70,16 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
       });
       const data = await res.json();
 
-      if (!res.ok) setError(data.message || "Login failed.");
+      if (!res.ok) toast.error(data.message || "Login failed.");
       else {
         login(data.access_token, data.user);
         onClose();
         if (data.user.role === "admin") router.push("/dashboard");
         else router.push("/");
+        toast.success("Logged in successfully!");
       }
     } catch (err) {
-      setError("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -91,15 +87,31 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess("");
 
     if (!name || !email || !phone || !password || !confirmPassword) {
-      setError("All fields are required");
+      toast.error("All fields are required");
       return;
     }
     if (password !== confirmPassword) {
-      setError("Passwords do not match");
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    const nameRegex = /^[a-zA-Z\s]*$/;
+    const phoneRegex = /^[0-9]*$/;
+
+    if (!nameRegex.test(name)) {
+      toast.error("Name must contain only alphabetic characters.");
+      return;
+    }
+
+    if (!phoneRegex.test(phone)) {
+      toast.error("Phone number must contain only numbers.");
+      return;
+    }
+
+    if (phone.length !== 11) {
+      toast.error("Phone number must be exactly 11 digits.");
       return;
     }
 
@@ -112,9 +124,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
       });
       const data = await res.json();
 
-      if (!res.ok) setError(data.message || "Registration failed.");
+      if (!res.ok) toast.error(data.message || "Registration failed.");
       else {
-        setSuccess("Account created successfully!");
+        // Fix: Using correct property for token based on backend response, assuming standard or adjust if needed
+        // If login expects specific structure, ensure data maps to it. 
+        // Previous code used login(data.access_token, data.user)
+        toast.success("Account created successfully!");
         login(data.access_token, data.user);
         setTimeout(() => {
           onClose();
@@ -122,7 +137,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
         }, 1500);
       }
     } catch (err) {
-      setError("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -130,7 +145,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
 
   const handleForgotPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return setError("Email is required");
+    if (!email) return toast.error("Email is required");
 
     setLoading(true);
     try {
@@ -140,11 +155,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) return setError(data.message || "Something went wrong");
-      setSuccess("Reset link sent to your email");
+      if (!res.ok) return toast.error(data.message || "Something went wrong");
+      toast.success("Reset link sent to your email");
       setEmail("");
     } catch (err) {
-      setError("Server error");
+      toast.error("Server error");
     } finally {
       setLoading(false);
     }
@@ -161,8 +176,8 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
       />
       
       {/* Modal Content */}
-      <div className="relative w-full max-w-[450px] bg-white rounded-3xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
-        <div className="p-8 relative">
+      <div className="relative w-full max-w-[400px] bg-white rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div className="p-5 relative">
           {/* Close Button */}
           <button 
             onClick={onClose}
@@ -172,16 +187,11 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
           </button>
 
           {/* Brand Header */}
-          <div className="flex flex-col items-center mb-8">
-            <div className="flex items-center justify-start relative w-fit mb-4">
-              <span className="border-2 border-gray-700 p-2 bg-gray-200 rounded-full text-2xl text-gray-800">
-                <MdHome />
-              </span>
-              <span className="absolute left-6 font-bold bg-gray-900 px-5 py-1.5 rounded-full text-white text-sm whitespace-nowrap">
-                Looks Shop
-              </span>
+          <div className="flex flex-col items-center mb-4">
+            <div className="flex items-center justify-center relative w-fit">
+              <img src="/logo.png" alt="EchoMart Logo" className="w-16 h-12 object-contain" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl font-bold text-gray-800">
               {view === "login" && "Welcome Back"}
               {view === "register" && "Create Account"}
               {view === "forgot-password" && "Reset Password"}
@@ -192,18 +202,6 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
               {view === "forgot-password" && "Enter your email to get a reset link"}
             </p>
           </div>
-
-          {/* Status Messages */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-red-500 text-sm text-center font-medium animate-in slide-in-from-top-2 duration-300">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="mb-4 p-3 bg-green-50 border border-green-100 rounded-xl text-green-500 text-sm text-center font-medium animate-in slide-in-from-top-2 duration-300">
-              {success}
-            </div>
-          )}
 
           {/* Forms */}
           <div className="space-y-4">
@@ -243,13 +241,28 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
                   {loading ? "Logging in..." : "Log In"}
                 </button>
 
+                <div className="relative flex items-center justify-center my-4">
+                  <div className="border-t w-full border-gray-200"></div>
+                  <span className="bg-white px-3 text-xs text-gray-500 font-medium">Or continue with</span>
+                  <div className="border-t w-full border-gray-200"></div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/google`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+                    <FaGoogle className="text-red-500 text-lg" /> Google
+                  </button>
+                  <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+                    <FaFacebook className="text-blue-600 text-lg" /> Facebook
+                  </button>
+                </div>
+
                 <div className="flex justify-between text-xs text-gray-500">
                   <label className="flex items-center gap-1.5 cursor-pointer hover:text-gray-700 transition-colors">
                     <input type="checkbox" className="accent-blue-800 rounded sm:w-4 sm:h-4 focus:ring-blue-800" /> Remember me
                   </label>
                   <button 
                     type="button"
-                    onClick={() => { setView("forgot-password"); setError(""); }}
+                    onClick={() => { setView("forgot-password"); }}
                     className="text-blue-800 hover:underline font-medium transition-all"
                   >
                     Forget Password?
@@ -270,13 +283,13 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
             )}
 
             {view === "register" && (
-              <form onSubmit={handleRegister} className="flex flex-col space-y-3">
+              <form onSubmit={handleRegister} className="flex flex-col space-y-2">
                 <input
                   type="text"
                   placeholder="Full Name"
                   value={name}
-                  onChange={e => setName(e.target.value)}
-                  className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  onChange={e => setName(e.target.value.replace(/[^a-zA-Z\s]/g, ""))}
+                  className="border p-2 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
                   required
                 />
                 <input
@@ -284,61 +297,82 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
                   placeholder="Email Address"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  className="border p-2 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
                   required
                 />
                 <input
                   type="tel"
                   placeholder="Phone Number"
                   value={phone}
-                  onChange={e => setPhone(e.target.value)}
-                  className="border p-3 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all"
+                  onChange={e => {
+                    const value = e.target.value.replace(/\D/g, "").slice(0, 11);
+                    setPhone(value);
+                  }}
+                  maxLength={11}
+                  className="border p-2 rounded-xl focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
                   required
                 />
-                <div className="relative">
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={e => setPassword(e.target.value)}
-                    className="border p-3 rounded-xl w-full pr-10 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                <div className="relative">
-                  <input
-                    type={confirmPassword && !showConfirmPassword ? "password" : "text"}
-                    placeholder="Confirm Password"
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    className="border p-3 rounded-xl w-full pr-10 focus:ring-2 focus:ring-blue-100 outline-none transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
-                  >
-                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="relative">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Password"
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      className="border p-2 rounded-xl w-full pr-8 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type={confirmPassword && !showConfirmPassword ? "password" : "text"}
+                      placeholder="Confirm"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      className="border p-2 rounded-xl w-full pr-8 focus:ring-2 focus:ring-blue-100 outline-none transition-all text-sm"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                    >
+                      {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    </button>
+                  </div>
                 </div>
 
                 <button
                   type="submit"
                   disabled={loading}
-                  className="bg-blue-800 text-white py-3 rounded-xl font-semibold mt-2 shadow-lg shadow-blue-100 hover:bg-blue-900 transition-all disabled:opacity-50"
+                  className="bg-blue-800 text-white py-2 rounded-xl font-semibold mt-1 shadow-lg shadow-blue-100 hover:bg-blue-900 transition-all disabled:opacity-50 text-sm"
                 >
                   {loading ? "Creating Account..." : "Register"}
                 </button>
 
-                <p className="text-center text-sm text-gray-500 pt-2">
+                <div className="relative flex items-center justify-center my-2">
+                  <div className="border-t w-full border-gray-200"></div>
+                  <span className="bg-white px-3 text-xs text-gray-500 font-medium">Or join with</span>
+                  <div className="border-t w-full border-gray-200"></div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2">
+                  <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/google`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+                    <FaGoogle className="text-red-500 text-lg" /> Google
+                  </button>
+                  <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+                    <FaFacebook className="text-blue-600 text-lg" /> Facebook
+                  </button>
+                </div>
+
+                <p className="text-center text-xs text-gray-500 pt-1">
                   Already have an account?{" "}
                   <button 
                     type="button"
@@ -371,7 +405,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
 
                 <button 
                   type="button"
-                  onClick={() => { setView("login"); setError(""); }}
+                  onClick={() => { setView("login"); }}
                   className="text-center text-sm text-blue-800 font-medium hover:underline pt-2 transition-all"
                 >
                   Back to Login

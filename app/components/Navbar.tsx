@@ -50,8 +50,8 @@ const Header = () => {
 
           <Link href="/" className="flex items-center hover:opacity-80 transition-opacity">
             <Image
-              src="https://res.cloudinary.com/dcfzqdk58/image/upload/v1767718693/logo_a7mnqm.png"
-              alt="Looks Shop Logo"
+              src="https://res.cloudinary.com/dcfzqdk58/image/upload/v1768734900/Gemini_Generated_Image_gkmj63gkmj63gkmj-removebg-preview_nvsfed.png"
+              alt="Echo Mart"
               width={200}
               height={40}
               className="h-8 md:h-10 w-auto object-contain"

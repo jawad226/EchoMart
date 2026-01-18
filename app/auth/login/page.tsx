@@ -2,7 +2,9 @@
 import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
 import { Eye, EyeOff } from "lucide-react";
+import { FaGoogle, FaFacebook } from "react-icons/fa";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
@@ -12,13 +14,12 @@ const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    e.preventDefault();
     setLoading(true);
-    setError("");
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/login`, {
@@ -28,7 +29,7 @@ const LoginPage = () => {
       });
       const data = await res.json();
 
-      if (!res.ok) setError(data.message || "Login failed.");
+      if (!res.ok) toast.error(data.message || "Login failed.");
       else {
         login(data.access_token, data.user);
         if (data.user.role === "admin") {
@@ -39,7 +40,7 @@ const LoginPage = () => {
       }
     } catch (err) {
       console.error(err);
-      setError("Something went wrong");
+      toast.error("Something went wrong");
     } finally {
       setLoading(false);
     }
@@ -49,12 +50,10 @@ const LoginPage = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="p-8 w-full max-w-md bg-white rounded-3xl shadow-xl">
         {/* Logo */}
-        <div className="flex items-center justify-start mb-8 relative">
-          <span className="border-2 border-gray-700 p-3 bg-gray-200 rounded-full text-3xl text-gray-800">
-            <MdHome />
-          </span>
-          <span className="absolute left-1/9 font-bold bg-gray-900 px-6 py-2 rounded-full text-white">
-            Looks Shop
+        <div className="flex items-center justify-center mb-8 relative">
+          <img src="/logo.png" alt="EchoMart Logo" className="w-16 h-16 object-contain" />
+          <span className="ml-3 font-bold text-2xl text-gray-900">
+            EchoMart
           </span>
         </div>
 
@@ -88,7 +87,7 @@ const LoginPage = () => {
             </button>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
+
 
           <button
             type="submit"
@@ -97,6 +96,21 @@ const LoginPage = () => {
           >
             {loading ? "Logging in..." : "Log In"}
           </button>
+
+          <div className="relative flex items-center justify-center my-4">
+            <div className="border-t w-full border-gray-200"></div>
+            <span className="bg-white px-3 text-xs text-gray-500 font-medium">Or continue with</span>
+            <div className="border-t w-full border-gray-200"></div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/google`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
+              <FaGoogle className="text-red-500 text-lg" /> Google
+            </button>
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
+              <FaFacebook className="text-blue-600 text-lg" /> Facebook
+            </button>
+          </div>
 
           <div className="flex justify-between text-sm text-gray-500 mt-2">
             <label>

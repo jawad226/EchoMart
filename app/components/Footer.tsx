@@ -14,8 +14,8 @@ export default function Footer() {
           <p className="text-sm leading-6">
             500 Terry Francine Street <br />
             San Francisco, CA 94158 <br />
-            <a href="mailto:info@looks.com" className="text-blue-600 hover:underline">
-              info@looks.com
+            <a href="mailto:info@echomart.com" className="text-blue-600 hover:underline">
+              info@echomart.com
             </a>
             <br />
             123-456-7890
@@ -84,9 +84,9 @@ export default function Footer() {
               src={`https://upload.wikimedia.org/wikipedia/commons/${logo === "visa"
                 ? "0/04/Visa.svg"
                 : logo === "mastercard"
-                ? "0/0e/Mastercard-logo.svg"
+                ? "https://res.cloudinary.com/dcfzqdk58/image/upload/v1765623313/vecteezy_mastercard-icon-symbol-logo_55687058_c9kvfz.png"
                 : logo === "amex"
-                ? "3/30/American_Express_logo_%282018%29.svg"
+                ? "https://res.cloudinary.com/dcfzqdk58/image/upload/v1765623313/vecteezy_mastercard-icon-symbol-logo_55687058_c9kvfz.png"
                 : logo === "paypal"
                 ? "b/b5/PayPal.svg"
                 : "5/5a/Discover_Card_logo.svg"
@@ -100,7 +100,7 @@ export default function Footer() {
 
       {/* Bottom Copyright */}
       <div className="text-center text-xs text-gray-500 mt-6">
-        © {new Date().getFullYear()} by Looks Shop.
+        © {new Date().getFullYear()} by EchoMart.
       </div>
     </footer>
   );

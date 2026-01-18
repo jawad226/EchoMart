@@ -16,9 +16,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Looks Shop",
+  title: "EchoMart",
   description: "Modern authentication system",
 };
+import { Toaster } from "react-hot-toast";
+
 export default function RootLayout({
   children,
 }: {
@@ -32,6 +34,7 @@ export default function RootLayout({
             <ConditionalLayout>
               {children}
             </ConditionalLayout>
+            <Toaster position="top-center" reverseOrder={false} />
           </CartProvider>
         </AuthProvider>
       </body>

@@ -5,6 +5,8 @@ import { MdHome } from "react-icons/md";
 import { Eye, EyeOff } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
+
 
 export const dynamic = 'force-dynamic';
 
@@ -23,9 +25,9 @@ const ResetPasswordContent = () => {
     e.preventDefault();
 
     // Validations
-    if (!password || !confirmPassword) return alert("All fields are required");
-    if (password !== confirmPassword) return alert("Passwords do not match");
-    if (!token) return alert("Invalid or expired reset token");
+    if (!password || !confirmPassword) return toast.error("All fields are required");
+    if (password !== confirmPassword) return toast.error("Passwords do not match");
+    if (!token) return toast.error("Invalid or expired reset token");
 
     setLoading(true);
     try {
@@ -37,7 +39,7 @@ const ResetPasswordContent = () => {
 
       const data = await res.json();
 
-      if (!res.ok) return alert(data.message || "Failed to reset password");
+      if (!res.ok) return toast.error(data.message || "Failed to reset password");
 
       alert("Password reset successful. Please login.");
       setPassword("");

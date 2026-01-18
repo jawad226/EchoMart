@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { MdHome } from "react-icons/md";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 const ForgetPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -9,7 +10,7 @@ const ForgetPasswordPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return alert("Email is required");
+    if (!email) return toast.error("Email is required");
 
     setLoading(true);
     try {
@@ -19,11 +20,11 @@ const ForgetPasswordPage = () => {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (!res.ok) return alert(data.message || "Something went wrong");
-      alert("Reset link sent to your email");
+      if (!res.ok) return toast.error(data.message || "Something went wrong");
+      toast.success("Reset link sent to your email");
       setEmail("");
     } catch (err) {
-      alert("Server error");
+      toast.error("Server error");
     } finally {
       setLoading(false);
     }
