@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, Suspense } from "react";
+import { useEffect, Suspense, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
@@ -10,10 +10,15 @@ const AuthSuccessContent = () => {
   const searchParams = useSearchParams();
   const { login } = useAuth();
 
+    const processing = useRef(false);
+
   useEffect(() => {
     const token = searchParams.get("token");
 
     if (token) {
+        if (processing.current) return;
+        processing.current = true;
+
       try {
         const payload = JSON.parse(atob(token.split(".")[1]));
         const user = {

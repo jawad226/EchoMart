@@ -37,7 +37,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setIsLoading(false);
     }, []);
 
-    const login = (newToken: string, newUser: User) => {
+    const login = React.useCallback((newToken: string, newUser: User) => {
         setToken(newToken);
         setUser(newUser);
         localStorage.setItem("token", newToken);
@@ -45,16 +45,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         // Set cookie for middleware access if needed
         document.cookie = `token=${newToken}; path=/; max-age=${60 * 60 * 24}`;
-    };
+    }, []);
 
-    const logout = () => {
+    const logout = React.useCallback(() => {
         setToken(null);
         setUser(null);
         localStorage.removeItem("token");
         localStorage.removeItem("user");
         document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         router.push("/auth/login");
-    };
+    }, [router]);
 
     return (
         <AuthContext.Provider value={{ user, token, login, logout, isLoading }}>
