@@ -83,10 +83,7 @@ const RegisterPage = () => {
         {/* Logo */}
         {/* Logo */}
         <div className="flex items-center justify-center mb-4 relative">
-          <img src="/logo.png" alt="EchoMart Logo" className="w-12 h-12 object-contain" />
-          <span className="ml-2 font-bold text-xl text-gray-900">
-            EchoMart
-          </span>
+          <img src="/logo.png" alt="EchoMart Logo" className="w-24 h-18 object-contain" />
         </div>
 
         <h1 className="text-xl font-bold text-gray-800 mb-2 text-center">Create Account</h1>

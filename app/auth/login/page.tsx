@@ -51,10 +51,7 @@ const LoginPage = () => {
       <div className="p-8 w-full max-w-md bg-white rounded-3xl shadow-xl">
         {/* Logo */}
         <div className="flex items-center justify-center mb-8 relative">
-          <img src="/logo.png" alt="EchoMart Logo" className="w-16 h-16 object-contain" />
-          <span className="ml-3 font-bold text-2xl text-gray-900">
-            EchoMart
-          </span>
+          <img src="/logo.png" alt="EchoMart Logo" className="w-24 h-18 object-contain" />
         </div>
 
         <h1 className="text-3xl font-bold text-gray-800 mb-1 text-center">Welcome Back</h1>

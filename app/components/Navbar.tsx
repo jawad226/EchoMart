@@ -66,7 +66,20 @@ const Header = () => {
           <div className="flex items-center gap-2 cursor-pointer hover:text-black transition">
             {user ? (
               <div className="flex items-center gap-2">
-                <span className="hidden sm:inline text-sm font-medium">{user.name}</span>
+                <Link href="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                  {user.picture ? (
+                    <img
+                      src={user.picture}
+                      alt={user.name}
+                      className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
+                      {user.name.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <span className="hidden sm:inline text-sm font-medium">{user.name}</span>
+                </Link>
                 <button onClick={logout} className="text-xs text-red-600 hover:underline">Logout</button>
                 {user.role === 'admin' && (
                   <Link href="/dashboard" className="text-xs text-blue-600 hover:underline">Admin</Link>
