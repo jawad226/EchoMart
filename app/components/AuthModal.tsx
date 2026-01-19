@@ -126,14 +126,12 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
 
       if (!res.ok) toast.error(data.message || "Registration failed.");
       else {
-        // Fix: Using correct property for token based on backend response, assuming standard or adjust if needed
-        // If login expects specific structure, ensure data maps to it. 
-        // Previous code used login(data.access_token, data.user)
-        toast.success("Account created successfully!");
-        login(data.access_token, data.user);
+        toast.success("Account created successfully! Please login.");
         setTimeout(() => {
-          onClose();
-          router.push("/");
+          setView("login");
+          // Optionally clear sensitive fields but keep email for convenience
+          setPassword("");
+          setConfirmPassword("");
         }, 1500);
       }
     } catch (err) {

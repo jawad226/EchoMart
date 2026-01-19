@@ -6,15 +6,53 @@ import { FaGoogle, FaFacebook } from "react-icons/fa";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { useAuth } from "@/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, Suspense } from "react";
 
-const LoginPage = () => {
+const LoginContent = () => {
   const { login } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const processing = useRef(false);
+
+  useEffect(() => {
+    const token = searchParams.get("token");
+    const type = searchParams.get("type");
+
+    if (token && type === "social") {
+      if (processing.current) return;
+      processing.current = true;
+
+      try {
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const user = {
+          id: payload.sub,
+          email: payload.email,
+          role: payload.role,
+          name: payload.name || "User",
+          picture: payload.picture,
+        };
+
+        toast.success(`Welcome ${user.name}! Verifying your account...`);
+
+        // Short delay to show the login page/message as requested
+        setTimeout(() => {
+          login(token, user);
+          if (user.role === "admin") {
+            router.push("/dashboard");
+          } else {
+            router.push("/");
+          }
+        }, 1500);
+      } catch (e) {
+        toast.error("Failed to verify social login");
+      }
+    }
+  }, [searchParams, login, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,6 +165,14 @@ const LoginPage = () => {
         </form>
       </div>
     </div>
+  );
+};
+
+const LoginPage = () => {
+  return (
+    <Suspense fallback={<div className="flex h-screen items-center justify-center font-bold text-blue-800">Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 };
 

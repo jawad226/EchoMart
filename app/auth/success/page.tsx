@@ -19,27 +19,12 @@ const AuthSuccessContent = () => {
         if (processing.current) return;
         processing.current = true;
 
-      try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        const user = {
-            id: payload.sub,
-            email: payload.email,
-            role: payload.role,
-          name: payload.name || "User",
-          picture: payload.picture,
-        };
-        
-        login(token, user);
-        toast.success("Successfully logged in via Social Account!");
-        router.push(user.role === 'admin' ? '/dashboard' : '/');
-      } catch (e) {
-        toast.error("Failed to process login");
-        router.push("/auth/login");
-      }
+      // Instead of logging in directly, redirect to login page for "verification"
+      router.push(`/auth/login?token=${token}&type=social`);
     } else {
       router.push("/auth/login");
     }
-  }, [searchParams, login, router]);
+  }, [searchParams, router]);
 
   return (
     <div className="flex h-screen items-center justify-center">
