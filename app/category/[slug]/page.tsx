@@ -120,7 +120,8 @@ export default function CategoryPage() {
                                                 title: product.name,
                                                 price: product.price,
                                                 image: product.image || "/EarFun.png",
-                                                qty: 1
+                                                qty: 1,
+                                                category: product.category.name
                                             })}
                                             className="bg-gray-900 hover:bg-purple-600 text-white p-3 rounded-xl transition-all hover:scale-110 shadow-lg"
                                         >

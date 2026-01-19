@@ -115,16 +115,23 @@ export default function OrderDetailsPage() {
                                 {order.items?.map((item: any, idx: number) => (
                                     <div key={idx} className="p-6 flex items-center justify-between">
                                         <div className="flex items-center gap-4">
-                                            <div className="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center text-2xl">
-                                                📦
+                                            <div className="w-16 h-16 bg-slate-800 rounded-lg flex items-center justify-center text-2xl overflow-hidden shrink-0">
+                                                {item.image ? (
+                                                    <img src={item.image} alt={item.productName} className="w-full h-full object-cover" />
+                                                ) : (
+                                                    <span>📦</span>
+                                                )}
                                             </div>
                                             <div>
                                                 <p className="font-medium text-lg">{item.productName}</p>
-                                                <p className="text-slate-400">Unit Price: Coming Soon</p>
+                                                <p className="text-slate-400">
+                                                    Unit Price: Rs {item.price ? item.price.toLocaleString() : 'N/A'}
+                                                </p>
                                             </div>
                                         </div>
                                         <div className="text-right">
                                             <p className="text-lg font-semibold">x{item.quantity}</p>
+                                            <p className="text-sm opacity-60">Rs {(item.price * item.quantity).toLocaleString()}</p>
                                         </div>
                                     </div>
                                 ))}

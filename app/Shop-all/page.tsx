@@ -162,7 +162,7 @@ export default function ShopAll() {
                       )}
                     </div>
                     <button
-                      onClick={() => addToCart({ id: product.id.toString(), title: product.name, price: product.price, image: product.image || "/EarFun.png", qty: 1 })}
+                      onClick={() => addToCart({ id: product.id.toString(), title: product.name, price: product.price, image: product.image || "/EarFun.png", qty: 1, category: product.category.name })}
                       className="bg-purple-600 hover:bg-purple-700 text-white p-2.5 rounded-xl transition-all shadow-lg hover:rotate-12"
                     >
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

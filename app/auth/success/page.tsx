@@ -25,7 +25,8 @@ const AuthSuccessContent = () => {
             id: payload.sub,
             email: payload.email,
             role: payload.role,
-            name: "User", // Placeholder until we fetch profile
+          name: payload.name || "User",
+          picture: payload.picture,
         };
         
         login(token, user);

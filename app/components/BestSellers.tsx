@@ -173,6 +173,7 @@ const BestSellers = () => {
                             price: product.price,
                             image: product.image,
                             qty: 1,
+                            category: product.category
                           })
                         }
                         className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-4 py-3 rounded-xl transition-all shadow-lg hover:scale-105"

@@ -101,7 +101,7 @@ export default function SalePage() {
                         <span className="text-sm text-gray-400 line-through font-bold">Rs {product.originalPrice}</span>
                       </div>
                       <button
-                        onClick={() => addToCart({ id: product.id.toString(), title: product.name, price: product.price, image: product.image || "/EarFun.png", qty: 1 })}
+                        onClick={() => addToCart({ id: product.id.toString(), title: product.name, price: product.price, image: product.image || "/EarFun.png", qty: 1, category: product.category.name })}
                         className="bg-red-600 hover:bg-black text-white px-6 py-3 rounded-2xl font-bold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-red-200"
                       >
                         Add to Cart

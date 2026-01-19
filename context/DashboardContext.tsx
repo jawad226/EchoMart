@@ -148,7 +148,9 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
           items: o.items?.map((i: any) => ({
             productName: i.product?.name || 'Unknown Product',
             quantity: i.quantity,
-            id: i.id
+            id: i.id,
+            price: i.price || i.product?.price || 0,
+            image: i.product?.image || null
           })) || [],
           status: o.status,
           amount: `Rs ${(o.totalAmount || 0).toLocaleString()}`,

@@ -118,7 +118,7 @@ export default function CheckoutPage() {
 
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 p-6 md:p-10">
 
-          <form onSubmit={handleCompleteOrder} className="max-w-2xl mx-auto p-4 md:p-6 overflow-y-auto border-r ">
+          <form onSubmit={handleCompleteOrder} className="max-w-2xl mx-auto p-4 md:p-6 overflow-y-auto border-gray-200 border-r ">
             {/* Contact Section */}
             <section className="mb-8 ">
               <h2 className="text-xl font-semibold mb-4 text-gray-800">Contact</h2>
@@ -559,24 +559,31 @@ export default function CheckoutPage() {
           <div className="relative">
             <div className="sticky top-15  h-fit">
 
-              <div className="max-h-53 border-b overflow-y-auto pr-2 space-y-2 mb-6">
+              <div className="max-h-53 border-gray-200 border-b overflow-y-auto p-4 space-y-4 mb-6">
                 {cart.map((item) => (
                   <div
                     key={item.id}
                     className="flex items-center justify-between pb-2"
                   >
                     <div className="flex items-center gap-3">
-                      <Image
-                        src={item.image}
-                        width={55}
-                        height={55}
-                        alt={item.title}
-                        className="rounded-md border"
-                      />
-                      <div>
-                        <p className="font-medium text-sm ">{item.title}</p>
-                        <p className="text-xs text-gray-500">
-                          {item.qty} × Rs. {item.price.toLocaleString()}
+                      <div className="relative">
+                        <div className="border border-gray-200 rounded-lg overflow-hidden shrink-0 w-16 h-16 bg-white">
+                          <Image
+                            src={item.image}
+                            width={64}
+                            height={64}
+                            alt={item.title}
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+                        <span className="absolute -top-2 -right-2 w-5 h-5 bg-gray-600/90 backdrop-blur-sm text-white text-[10px] font-medium flex items-center justify-center rounded-full shadow-sm z-10">
+                          {item.qty}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-medium text-sm text-gray-800 line-clamp-2">{item.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">
+                          {item.category || 'Apparel'}
                         </p>
                       </div>
                     </div>
