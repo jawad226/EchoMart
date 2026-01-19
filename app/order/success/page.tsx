@@ -28,7 +28,7 @@ export default function SuccessPage() {
 
         <h1 className="text-3xl font-extrabold text-gray-900 mb-2">Order Confirmed!</h1>
         <p className="text-gray-600 mb-8">
-          Thank you for your purchase. We've received your order and are getting it ready for shipment.
+          Thank you for your purchase. We&apos;ve received your order and are getting it ready for shipment.
         </p>
 
         <div className="bg-gray-50 rounded-2xl p-6 mb-8 text-left">

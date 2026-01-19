@@ -268,7 +268,7 @@ const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, initialView = "l
                 </div>
 
                 <p className="text-center text-sm text-gray-500 pt-2">
-                  Don't have an account?{" "}
+                  Don&apos;t have an account?{" "}
                   <button 
                     type="button"
                     onClick={() => { setView("register"); resetForm(); }}

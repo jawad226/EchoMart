@@ -31,7 +31,7 @@ const AboutPage = () => {
             </p>
             <p className="text-gray-600 text-lg leading-relaxed">
               We carefully curate every product in our catalog, ensuring it meets our rigorous standards for performance 
-              and aesthetics. From earbuds to adapted cases, we've got you covered.
+              and aesthetics. From earbuds to adapted cases, we&apos;ve got you covered.
             </p>
           </div>
           <div className="bg-white p-1 rounded-3xl shadow-xl transform rotate-2">

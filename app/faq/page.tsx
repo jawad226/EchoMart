@@ -22,7 +22,7 @@ export default function FAQPage() {
     },
     {
       category: "Orders",
-      question: "Can I change my order after it's placed?",
+      question: "Can I change my order after it&apos;s placed?",
       answer: "Orders can be modified within 2 hours of placement. Please contact our support team immediately if you need to make changes."
     },
     {
@@ -119,7 +119,7 @@ export default function FAQPage() {
         <div className="bg-gray-900 rounded-[3rem] p-12 text-center text-white relative overflow-hidden">
           <h2 className="text-3xl font-bold mb-6">Still have questions?</h2>
           <p className="text-gray-400 mb-10 max-w-lg mx-auto leading-relaxed">
-            If you couldn't find the answer you were looking for, our team is always ready to help you out.
+            If you couldn&apos;t find the answer you were looking for, our team is always ready to help you out.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a href="/contact" className="w-full sm:w-auto bg-blue-600 text-white px-10 py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all flex items-center justify-center gap-2">
