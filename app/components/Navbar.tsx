@@ -80,7 +80,7 @@ const Header = () => {
                   )}
                   <span className="hidden sm:inline text-sm font-medium">{user.name}</span>
                 </Link>
-                <button onClick={logout} className="text-xs text-red-600 hover:underline">Logout</button>
+                <button onClick={() => { logout(); setAuthView("login"); setIsAuthModalOpen(true); }} className="text-xs text-red-600 hover:underline">Logout</button>
                 {user.role === 'admin' && (
                   <Link href="/dashboard" className="text-xs text-blue-600 hover:underline">Admin</Link>
                 )}
@@ -157,7 +157,7 @@ const Header = () => {
 
               {user ? (
                 <button
-                  onClick={() => { logout(); toggleMobileMenu(); }}
+                  onClick={() => { logout(); toggleMobileMenu(); setAuthView("login"); setIsAuthModalOpen(true); }}
                   className="py-3 px-2 text-left hover:bg-gray-50 rounded-md font-medium mt-4 border-t border-gray-100 text-red-600"
                 >
                   Logout ({user.name})
