@@ -30,7 +30,7 @@ const BestSellers = () => {
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products`);
         if (res.ok) {
           const data = await res.json();
           // Map backend data to Home page format

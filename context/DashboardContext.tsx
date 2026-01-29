@@ -107,7 +107,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       setLoading(true);
 
       // Fetch Stats
-      const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/stats/dashboard`, {
+      const statsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/stats/dashboard`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (statsRes.ok) {
@@ -119,14 +119,14 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Fetch Categories
-      const catRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/categories`);
+      const catRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/categories`);
       if (catRes.ok) {
         const categories = await catRes.json();
         setCategoriesData(categories);
       }
 
       // Fetch Products
-      const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products`);
+      const productsRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products`);
       if (productsRes.ok) {
         const products = await productsRes.json();
         const mappedProducts = products.map((p: any) => ({
@@ -137,7 +137,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
       }
 
       // Fetch Orders
-      const ordersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/orders`);
+      const ordersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/orders`);
       let orders = [];
       if (ordersRes.ok) {
         orders = await ordersRes.json();
@@ -165,7 +165,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
       // Fetch Customers (Users)
       console.log('Fetching customers...');
-      const usersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/user`, {
+      const usersRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/user`, {
         headers: { "Authorization": `Bearer ${token}` }
       });
       if (usersRes.ok) {
@@ -205,7 +205,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Product actions - Persistence Implementation
   const addProduct = async (product: any) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -227,7 +227,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const updateProduct = async (id: string | number, updates: any) => {
     try {
       console.log('Updating product:', id, updates);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -252,7 +252,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   const deleteProduct = async (id: string | number) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -270,7 +270,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Category actions
   const addCategory = async (category: any) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/categories`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/categories`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -291,7 +291,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
   const deleteCategory = async (id: string | number) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/categories/${id}`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/categories/${id}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });
@@ -309,7 +309,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   // Order actions
   const addOrder = async (order: any) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/orders`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(order),
@@ -331,7 +331,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
 
       // Call backend API if status is being updated
       if (updates.status) {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/orders/${id}/status`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/orders/${id}/status`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

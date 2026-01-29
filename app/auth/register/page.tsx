@@ -54,7 +54,7 @@ const RegisterPage = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/register`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, email, phone, password }),
@@ -139,10 +139,10 @@ const RegisterPage = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/google`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/google`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
               <FaGoogle className="text-red-500 text-lg" /> Google
             </button>
-            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-xs">
               <FaFacebook className="text-blue-600 text-lg" /> Facebook
             </button>
           </div>

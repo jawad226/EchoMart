@@ -37,8 +37,8 @@ export default function ShopAll() {
     const fetchData = async () => {
       try {
         const [prodRes, catRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/products`),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/categories`)
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/products`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/categories`)
         ]);
         const prodData: Product[] = await prodRes.json();
         const catData: Category[] = await catRes.json();

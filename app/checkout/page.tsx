@@ -50,7 +50,7 @@ export default function CheckoutPage() {
         customerId: user?.id, // Ensure customerId is passed
       };
 
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/orders`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

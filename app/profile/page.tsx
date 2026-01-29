@@ -24,7 +24,7 @@ const ProfilePage = () => {
     setLoading(true);
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/user/profile`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/user/profile`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

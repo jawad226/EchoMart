@@ -60,7 +60,7 @@ const LoginContent = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/login`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -139,10 +139,10 @@ const LoginContent = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/google`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/google`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
               <FaGoogle className="text-red-500 text-lg" /> Google
             </button>
-            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://looks-shop-backend-production-176a.up.railway.app"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
+            <button type="button" onClick={() => window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "https://echomart-backend.onrender.com"}/auth/facebook`} className="flex items-center justify-center gap-2 p-2.5 border rounded-xl hover:bg-gray-50 transition-all text-gray-700 font-medium text-sm">
               <FaFacebook className="text-blue-600 text-lg" /> Facebook
             </button>
           </div>
