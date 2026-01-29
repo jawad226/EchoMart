@@ -36,7 +36,7 @@ function DashboardContent() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatsCard 
             title="Total Revenue"
-            value={`Rs ${totalSales.toLocaleString()}`} 
+            value={`${totalSales.toLocaleString()}`} 
             growth={salesGrowth}
             icon="DollarSign"
           />
