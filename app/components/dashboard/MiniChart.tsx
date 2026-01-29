@@ -1,4 +1,4 @@
-"use client"; // important for Next.js 13+ app directory
+"use client"; 
 
 import React, { useState, useEffect } from "react";
 
@@ -9,9 +9,10 @@ export default function MiniChart() {
   useEffect(() => {
     const generateDataPoints = () => {
       const points = [];
-      const baseValue = 20;
+      const baseValue = 15; // Lower base value for cleaner look
       for (let i = 0; i <= 30; i++) {
-        const variation = Math.sin(i / 5) * 5 + Math.random() * 3;
+        // More smooth variation for "professional" look
+        const variation = Math.sin(i / 4) * 6 + Math.cos(i / 8) * 3 + Math.random() * 2;
         const value = baseValue - variation;
         points.push(`${i * 3.33},${Math.max(2, Math.min(28, value))}`);
       }
@@ -23,7 +24,7 @@ export default function MiniChart() {
       .split(" ")
       .map((point) => {
         const [x, y] = point.split(",");
-        return `${x},${parseFloat(y) + 8}`;
+        return `${x},${Math.min(28, parseFloat(y) + 5)}`;
       })
       .join(" ");
 
@@ -31,7 +32,6 @@ export default function MiniChart() {
     setOrdersData(orders);
   }, []);
 
-  // While loading on server, don't render chart
   if (!salesData || !ordersData) return null;
 
   return (
@@ -45,20 +45,34 @@ export default function MiniChart() {
       >
         <defs>
           <linearGradient id="salesGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.1" />
             <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="ordersGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#10b981" stopOpacity="0.1" />
             <stop offset="100%" stopColor="#10b981" stopOpacity="0" />
           </linearGradient>
         </defs>
 
         <polygon fill="url(#salesGradient)" points={`0,30 ${salesData} 100,30`} />
-        <polyline fill="none" stroke="#3b82f6" strokeWidth="2" points={salesData} />
+        <polyline
+          fill="none"
+          stroke="#3b82f6"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={salesData}
+        />
 
         <polygon fill="url(#ordersGradient)" points={`0,30 ${ordersData} 100,30`} />
-        <polyline fill="none" stroke="#10b981" strokeWidth="2" points={ordersData} />
+        <polyline
+          fill="none"
+          stroke="#10b981"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          points={ordersData}
+        />
       </svg>
     </div>
   );

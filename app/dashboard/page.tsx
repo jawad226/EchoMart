@@ -18,107 +18,115 @@ function DashboardContent() {
   const productsGrowth = '+5.1%';
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-slate-900 to-slate-800 text-white flex">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
       <Sidebar />
 
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="flex items-center justify-between mb-6">
+      <main className="flex-1 p-6 md:p-8 overflow-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
-            <h2 className="text-3xl font-bold">Dashboard Overview</h2>
-            <p className="text-sm opacity-70 mt-1">Welcome back! Here's what's happening with your store.</p>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">Dashboard</h2>
+            <p className="text-slate-500 mt-1">Welcome back! Here's a summary of your store's performance.</p>
           </div>
-          <div className="text-sm bg-white/5 px-4 py-2 rounded-lg border border-white/10">
-            {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          <div className="text-sm font-medium bg-white px-4 py-2 rounded-xl shadow-sm border border-slate-200 text-slate-700">
+            {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
           </div>
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatsCard 
-            title="Total Sales" 
-            value={totalSales} 
+            title="Total Revenue"
+            value={`Rs ${totalSales.toLocaleString()}`} 
             growth={salesGrowth}
-            icon="💰"
+            icon="DollarSign"
           />
           <StatsCard 
             title="Total Orders" 
             value={orders} 
             growth={ordersGrowth}
-            icon="📦"
+            icon="Package"
           />
           <StatsCard 
-            title="Customers" 
+            title="Total Customers" 
             value={customers} 
             growth={customersGrowth}
-            icon="👥"
+            icon="Users"
           />
           <StatsCard 
-            title="Products" 
+            title="Products in Store" 
             value={products} 
             growth={productsGrowth}
-            icon="📱"
+            icon="ShoppingBag"
           />
         </div>
 
         {/* Charts and Top Categories */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-          <div className="lg:col-span-2 bg-white/5 rounded-lg p-6 border border-white/10">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-lg">Sales Overview</h3>
-              <div className="flex gap-2">
-                <button className="text-xs bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition-colors">7D</button>
-                <button className="text-xs bg-white/20 px-3 py-1 rounded hover:bg-white/20 transition-colors">30D</button>
-                <button className="text-xs bg-white/10 px-3 py-1 rounded hover:bg-white/20 transition-colors">90D</button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+          <div className="lg:col-span-2 bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="font-bold text-lg text-slate-800">Sales Analytics</h3>
+                <p className="text-xs text-slate-500">Performance over time</p>
+              </div>
+              <div className="flex gap-2 bg-slate-100 p-1 rounded-lg">
+                <button className="text-xs px-3 py-1.5 rounded-md hover:bg-white transition-all text-slate-500">7D</button>
+                <button className="text-xs bg-white px-3 py-1.5 rounded-md shadow-sm text-slate-900 font-medium">30D</button>
+                <button className="text-xs px-3 py-1.5 rounded-md hover:bg-white transition-all text-slate-500">90D</button>
               </div>
             </div>
-            <div className="h-48">
+            <div className="h-64">
               <MiniChart />
             </div>
-            <div className="mt-4 flex items-center justify-between text-sm">
-              <div className="flex items-center gap-4">
+            <div className="mt-6 flex items-center justify-between text-sm border-t border-slate-100 pt-4">
+              <div className="flex items-center gap-6">
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-blue-400 rounded-full"></div>
-                  <span className="opacity-70">Revenue</span>
+                  <div className="w-2.5 h-2.5 bg-blue-500 rounded-full"></div>
+                  <span className="text-slate-600 font-medium">Revenue</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-green-400 rounded-full"></div>
-                  <span className="opacity-70">Orders</span>
+                  <div className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></div>
+                  <span className="text-slate-600 font-medium">Orders</span>
                 </div>
               </div>
-              <div className="text-xs opacity-60">Last 30 days performance</div>
+              <div className="text-xs font-medium text-slate-400">Last updated: Just now</div>
             </div>
           </div>
 
-          <SaleComponent />
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <SaleComponent />
+          </div>
         </div>
 
         {/* Recent Orders and Best Products */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
             <RecentOrders />
           </div>
 
-          <div className="space-y-4">
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <h3 className="font-semibold mb-4 text-lg">Best Selling Products</h3>
-              <div className="space-y-4">
+          <div className="space-y-6">
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="font-bold text-lg text-slate-800">Best Sellers</h3>
+                <button className="text-xs font-semibold text-blue-600 hover:text-blue-700">View All</button>
+              </div>
+              <div className="space-y-5">
                 {productsData
                   .sort((a, b) => b.sold - a.sold)
                   .slice(0, 4)
                   .map((product, index) => (
-                    <div key={product.id} className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center text-xs font-bold">
+                    <div key={product.id} className="flex items-center justify-between group">
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center text-xs font-bold text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-500 transition-colors">
                           {index + 1}
                         </div>
                         <div>
-                          <div className="text-sm font-medium">{product.name}</div>
-                          <div className="text-xs opacity-60">{product.category}</div>
+                          <div className="text-sm font-bold text-slate-800">{product.name}</div>
+                          <div className="text-xs text-slate-500">{product.category}</div>
                         </div>
                       </div>
                       <div className="text-right">
-                        <div className="font-mono text-sm">{product.sold} sold</div>
-                        <div className="text-xs opacity-60">Rs {product.price.toLocaleString()}</div>
+                        <div className="font-bold text-sm text-slate-900">{product.sold} sold</div>
+                        <div className="text-xs text-slate-400 font-medium">Rs {product.price.toLocaleString()}</div>
                       </div>
                     </div>
                   ))}
@@ -126,24 +134,24 @@ function DashboardContent() {
             </div>
 
             {/* Quick Stats */}
-            <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-              <h3 className="font-semibold mb-3 text-lg">Quick Stats</h3>
-              <div className="space-y-3 text-sm">
-                <div className="flex items-center justify-between">
-                  <span className="opacity-70">Avg Order Value</span>
-                  <span className="font-semibold">Rs 1,406</span>
+            <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+              <h3 className="font-bold text-lg text-slate-800 mb-6">Store Performance</h3>
+              <div className="space-y-4">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                  <span className="text-sm text-slate-600 font-medium">Avg Order Value</span>
+                  <span className="font-bold text-slate-900">Rs 1,406</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="opacity-70">Conversion Rate</span>
-                  <span className="font-semibold">3.2%</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50">
+                  <span className="text-sm text-slate-600 font-medium">Conversion Rate</span>
+                  <span className="font-bold text-slate-900">3.2%</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="opacity-70">Return Rate</span>
-                  <span className="font-semibold text-green-400">2.1%</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-emerald-50">
+                  <span className="text-sm text-emerald-700 font-medium">Return Rate</span>
+                  <span className="font-bold text-emerald-700">2.1%</span>
                 </div>
-                <div className="flex items-center justify-between">
-                  <span className="opacity-70">Customer Satisfaction</span>
-                  <span className="font-semibold text-yellow-400">4.7/5</span>
+                <div className="flex items-center justify-between p-3 rounded-xl bg-amber-50">
+                  <span className="text-sm text-amber-700 font-medium">Satisfaction</span>
+                  <span className="font-bold text-amber-700">4.7/5</span>
                 </div>
               </div>
             </div>

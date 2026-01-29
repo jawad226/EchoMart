@@ -18,26 +18,42 @@ export default function SaleComponent({ salesData = DEFAULT_SALES }: SaleProps) 
   const maxSold = Math.max(...items.map((i) => i.sold), 1);
 
   return (
-    <div className="bg-white/5 rounded-lg p-4">
-      <h3 className="font-semibold mb-3">Top Categories</h3>
-      <div className="space-y-3">
-        {items.map((item) => (
-          <div key={item.id} className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/10 rounded flex items-center justify-center font-bold">{item.name.split(' ').map(s=>s[0]).slice(0,2).join('')}</div>
-            <div className="flex-1">
-              <div className="flex justify-between text-sm">
-                <div>{item.name}</div>
-                <div className="font-mono">{item.sold}</div>
-              </div>
-              <div className="mt-2">
-                <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                  <div className="h-2 rounded-full bg-white" style={{ width: `${Math.round((item.sold / maxSold) * 100)}%` }} />
+    <div className="p-6">
+      <div className="mb-6">
+        <h3 className="font-bold text-lg text-slate-800">Top Categories</h3>
+        <p className="text-xs text-slate-500 mt-1">Most popular product types</p>
+      </div>
+      <div className="space-y-6">
+        {items.map((item) => {
+          const percentage = Math.round((item.sold / maxSold) * 100);
+          return (
+            <div key={item.id} className="group">
+              <div className="flex items-center gap-4 mb-2">
+                <div className="w-10 h-10 bg-slate-50 rounded-xl flex items-center justify-center font-bold text-slate-400 group-hover:bg-blue-50 group-hover:text-blue-600 transition-colors">
+                  {item.name.split(' ').map(s => s[0]).slice(0, 2).join('')}
                 </div>
-                <div className="text-xs opacity-80 mt-1">{Math.round((item.sold / maxSold) * 100)}% of top</div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-end">
+                    <div className="text-sm font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{item.name}</div>
+                    <div className="text-xs font-extrabold text-slate-900">{item.sold} <span className="text-slate-400 font-medium">units</span></div>
+                  </div>
+                </div>
+              </div>
+              <div className="pl-14">
+                <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full rounded-full bg-blue-500 group-hover:bg-blue-600 transition-all duration-500 shadow-sm"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
+                <div className="flex justify-between items-center mt-1.5">
+                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{percentage}% of target</span>
+                  <span className="text-[10px] font-bold text-emerald-500">+12% growth</span>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

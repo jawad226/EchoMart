@@ -63,34 +63,46 @@ const Header = () => {
         {/* Icons */}
         <div className="flex items-center gap-4 sm:gap-5 text-gray-700">
           <Search className="w-5 h-5 cursor-pointer hover:text-black transition" />
-          <div className="flex items-center gap-2 cursor-pointer hover:text-black transition">
+          <div className="flex items-center gap-2 cursor-pointer group">
             {user ? (
-              <div className="flex items-center gap-2">
-                <Link href="/profile" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
+              <div className="flex items-center gap-3">
+                <Link href="/profile" className="flex items-center gap-2 py-1 px-2 rounded-lg hover:bg-slate-50 transition-all border border-transparent hover:border-slate-100">
                   {user.picture ? (
                     <img
                       src={user.picture}
                       alt={user.name}
-                      className="w-8 h-8 rounded-full object-cover border border-gray-200"
+                      className="w-7 h-7 rounded-full object-cover border border-slate-200"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold border border-blue-200">
+                      <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center text-white text-[10px] font-bold">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   )}
-                  <span className="hidden sm:inline text-sm font-medium">{user.name}</span>
+                  <span className="hidden sm:inline text-sm font-bold text-slate-700">{user.name}</span>
                 </Link>
-                <button onClick={() => { logout(); setAuthView("login"); setIsAuthModalOpen(true); }} className="text-xs text-red-600 hover:underline">Logout</button>
-                {user.role === 'admin' && (
-                  <Link href="/dashboard" className="text-xs text-blue-600 hover:underline">Admin</Link>
-                )}
+                <div className="flex items-center gap-1">
+                  {user.role === 'admin' && (
+                    <Link
+                      href="/dashboard"
+                      className="text-[10px] font-extrabold uppercase tracking-widest bg-blue-50 text-blue-600 px-2 py-1 rounded-md hover:bg-blue-100 transition-colors"
+                    >
+                      Admin
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => { logout(); setAuthView("login"); setIsAuthModalOpen(true); }}
+                    className="text-[10px] font-extrabold uppercase tracking-widest bg-slate-50 text-slate-500 px-2 py-1 rounded-md hover:bg-red-50 hover:text-red-600 transition-colors"
+                  >
+                    Logout
+                  </button>
+                </div>
               </div>
             ) : (
                 <button
                   onClick={() => { setAuthView("login"); setIsAuthModalOpen(true); }}
-                  className="hidden sm:inline text-sm hover:text-black transition"
+                  className="p-2 rounded-full hover:bg-slate-50 transition-colors"
                 >
-                  <User className="w-5 h-5" />
+                  <User className="w-5 h-5 text-slate-600" />
                 </button>
             )}
           </div>

@@ -3,16 +3,29 @@
 import React, { useState } from 'react';
 import Sidebar from '../../components/dashboard/Sidebar';
 import { DashboardProvider, useDashboard } from '../../../context/DashboardContext';
+import {
+  Users,
+  Search,
+  Trash2,
+  UserPlus,
+  Mail,
+  Calendar,
+  CreditCard,
+  CheckCircle2,
+  XCircle,
+  MoreVertical
+} from 'lucide-react';
 
 function CustomersContent() {
   const { customersData, addCustomer, updateCustomer, deleteCustomer } = useDashboard();
   const [searchTerm, setSearchTerm] = useState('');
+  const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [newCustomer, setNewCustomer] = useState({
     name: '',
     email: '',
     orders: 0,
     totalSpent: '',
-    joinDate: '',
+    joinDate: new Date().toISOString().split('T')[0],
     status: 'Active' as 'Active' | 'Inactive',
   });
   const [error, setError] = useState<string | null>(null);
@@ -48,179 +61,223 @@ function CustomersContent() {
       email: '',
       orders: 0,
       totalSpent: '',
-      joinDate: '',
+      joinDate: new Date().toISOString().split('T')[0],
       status: 'Active',
     });
     setError(null);
+    setIsPanelOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-r from-slate-900 to-slate-800 text-white flex">
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex">
       <Sidebar />
 
-      <main className="flex-1 p-6 overflow-auto">
-        <div className="mb-6">
-          <h2 className="text-3xl font-bold mb-2">Customer Management</h2>
-          <p className="text-sm opacity-70">Manage your customer database</p>
+      <main className="flex-1 p-6 md:p-8 overflow-auto">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div>
+            <h2 className="text-3xl font-extrabold tracking-tight text-slate-900">User Intelligence</h2>
+            <p className="text-slate-500 mt-1">Manage and segment your customer database.</p>
+          </div>
+          <button
+            onClick={() => setIsPanelOpen(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-2xl font-bold shadow-lg shadow-blue-100 flex items-center gap-2 transition-all active:scale-95"
+          >
+            <UserPlus size={20} />
+            <span>New Customer</span>
+          </button>
         </div>
 
-        {/* Search & Add */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-          <div className="lg:col-span-2">
+        {/* Filters and Stats */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+          <div className="lg:col-span-2 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={20} />
             <input
               type="text"
-              placeholder="Search customers by name or email..."
+              placeholder="Search by name, email, or order ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+              className="w-full bg-white border border-slate-200 rounded-2xl pl-12 pr-4 py-4 focus:outline-none focus:ring-4 focus:ring-blue-500/5 transition-all font-medium shadow-sm hover:border-slate-300"
             />
           </div>
-
-          <div className="bg-white/5 border border-white/10 rounded-lg p-4 space-y-2">
-            <div className="grid grid-cols-2 gap-2">
-              <input
-                type="text"
-                placeholder="Name"
-                value={newCustomer.name}
-                onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <input
-                type="email"
-                placeholder="Email"
-                value={newCustomer.email}
-                onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <input
-                type="number"
-                min={0}
-                placeholder="Orders"
-                value={newCustomer.orders}
-                onChange={(e) => setNewCustomer({ ...newCustomer, orders: Number(e.target.value) })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <input
-                type="text"
-                placeholder="Total Spent (e.g. Rs 5,000)"
-                value={newCustomer.totalSpent}
-                onChange={(e) => setNewCustomer({ ...newCustomer, totalSpent: e.target.value })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <input
-                type="date"
-                placeholder="Join Date"
-                value={newCustomer.joinDate}
-                onChange={(e) => setNewCustomer({ ...newCustomer, joinDate: e.target.value })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              />
-              <select
-                value={newCustomer.status}
-                onChange={(e) => setNewCustomer({ ...newCustomer, status: e.target.value as 'Active' | 'Inactive' })}
-                className="bg-white/5 border border-white/10 rounded px-2 py-1 text-sm focus:outline-none focus:border-blue-500"
-              >
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
+          <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+              <Users size={24} />
             </div>
-            {error && <p className="text-xs text-red-400">{error}</p>}
-            <button
-              onClick={handleAddCustomer}
-              className="w-full bg-blue-500/80 hover:bg-blue-500 text-white rounded px-3 py-2 text-sm font-semibold transition-colors"
-            >
-              Add Customer
-            </button>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Growth</p>
+              <p className="text-xl font-black text-slate-900">{customersData.length}</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex items-center gap-4">
+            <div className="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+              <CheckCircle2 size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Active</p>
+              <p className="text-xl font-black text-emerald-600 leading-tight">
+                {customersData.filter(c => c.status === 'Active').length}
+              </p>
+            </div>
           </div>
         </div>
 
         {/* Customers Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
           {filteredCustomers.map((customer) => (
-            <div key={customer.id} className="bg-white/5 rounded-lg p-5 border border-white/10 hover:bg-white/10 transition-all">
-              <div className="flex items-start justify-between mb-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center text-xl font-bold">
-                    {customer.name[0]}
+            <div key={customer.id} className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm hover:shadow-xl transition-all group relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-slate-50 rounded-full -mr-16 -mt-16 group-hover:bg-blue-50/50 transition-colors duration-500"></div>
+
+              <div className="flex items-start justify-between relative z-10 mb-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-xl font-black shadow-lg shadow-blue-200 group-hover:scale-110 transition-transform">
+                    {customer.name[0].toUpperCase()}
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">{customer.name}</h3>
-                    <p className="text-xs opacity-60">{customer.email}</p>
+                    <h3 className="font-black text-slate-800 tracking-tight text-lg">{customer.name}</h3>
+                    <div className="flex items-center gap-1.5 text-slate-400">
+                      <Mail size={12} />
+                      <span className="text-xs font-bold font-mono">{customer.email}</span>
+                    </div>
                   </div>
                 </div>
-                <span className={`px-2 py-1 rounded text-xs border ${
-                  customer.status === 'Active' 
-                    ? 'bg-green-500/20 text-green-400 border-green-500/30'
-                    : 'bg-gray-500/20 text-gray-400 border-gray-500/30'
-                }`}>
-                  {customer.status}
-                </span>
-              </div>
-
-              <div className="space-y-2 mb-4">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="opacity-70">Orders:</span>
-                  <span className="font-semibold">{customer.orders}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="opacity-70">Total Spent:</span>
-                  <span className="font-semibold">{customer.totalSpent}</span>
-                </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="opacity-70">Member Since:</span>
-                  <span className="text-xs opacity-60">{customer.joinDate}</span>
+                <div className="flex flex-col items-end gap-2">
+                  <span className={`px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-tighter border ${customer.status === 'Active' 
+                      ? 'bg-emerald-50 text-emerald-600 border-emerald-100'
+                      : 'bg-slate-50 text-slate-400 border-slate-200'
+                    }`}>
+                    {customer.status}
+                  </span>
+                  <button onClick={() => handleDelete(customer.id)} className="p-1.5 text-slate-300 hover:text-red-500 transition-colors">
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               </div>
 
-              <div className="flex gap-2">
-                <select
-                  value={customer.status}
-                  onChange={(e) => handleStatusChange(customer.id, e.target.value as 'Active' | 'Inactive')}
-                  className="flex-1 bg-white/5 border border-white/10 rounded px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                >
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-                <button
-                  onClick={() => handleDelete(customer.id)}
-                  className="bg-red-500/20 hover:bg-red-500/30 text-red-400 px-3 py-2 rounded text-sm transition-colors"
-                >
-                  Delete
-                </button>
+              <div className="grid grid-cols-2 gap-4 mb-6 relative z-10">
+                <div className="bg-slate-50/80 p-3 rounded-2xl border border-white">
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                    <CreditCard size={10} /> Orders
+                  </div>
+                  <span className="text-lg font-black text-slate-900">{customer.orders}</span>
+                </div>
+                <div className="bg-slate-50/80 p-3 rounded-2xl border border-white">
+                  <div className="flex items-center gap-1.5 text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">
+                    <Calendar size={10} /> Tenure
+                  </div>
+                  <span className="text-xs font-black text-slate-600 truncate block">{customer.joinDate}</span>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between pt-4 border-t border-slate-50 relative z-10">
+                <div>
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-0.5">Value</span>
+                  <span className="text-xl font-black text-blue-600">{customer.totalSpent}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <select
+                    value={customer.status}
+                    onChange={(e) => handleStatusChange(customer.id, e.target.value as 'Active' | 'Inactive')}
+                    className="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-[10px] font-black uppercase focus:outline-none focus:ring-2 focus:ring-blue-500 appearance-none pr-8 relative cursor-pointer"
+                  >
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
               </div>
             </div>
           ))}
         </div>
 
         {filteredCustomers.length === 0 && (
-          <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10">
-            <div className="text-6xl mb-4">👥</div>
-            <h3 className="text-lg font-semibold mb-2">No customers found</h3>
-            <p className="text-sm opacity-70">Try adjusting your search</p>
+          <div className="text-center py-24 bg-white rounded-3xl border border-dashed border-slate-200 mt-8">
+            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-300">
+              <Users size={40} />
+            </div>
+            <h3 className="text-lg font-black text-slate-800 tracking-tight">No match discovered</h3>
+            <p className="text-sm font-bold text-slate-400 mt-1">Try refining your search parameters.</p>
           </div>
         )}
 
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <div className="text-xs opacity-70 mb-1">Total Customers</div>
-            <div className="text-2xl font-bold">{customersData.length}</div>
-          </div>
-          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <div className="text-xs opacity-70 mb-1">Active</div>
-            <div className="text-2xl font-bold text-green-400">
-              {customersData.filter(c => c.status === 'Active').length}
+        {/* PANEL / MODAL FOR ADDING */}
+        {isPanelOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-4">
+            <div className="bg-white rounded-3xl p-8 w-full max-w-md shadow-2xl animate-fade-in border border-slate-100">
+              <div className="flex items-start justify-between mb-8">
+                <div>
+                  <h3 className="text-2xl font-black text-slate-900">Provision Account</h3>
+                  <p className="text-slate-500 text-sm mt-1">Onboard a new customer to the platform.</p>
+                </div>
+                <button onClick={() => setIsPanelOpen(false)} className="p-2 text-slate-400 hover:bg-slate-100 rounded-xl">
+                  <XCircle size={24} />
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Full Name</label>
+                    <input
+                      type="text"
+                      placeholder="John Doe"
+                      value={newCustomer.name}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, name: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Email Addr</label>
+                    <input
+                      type="email"
+                      placeholder="john@example.com"
+                      value={newCustomer.email}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, email: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Initial Orders</label>
+                    <input
+                      type="number"
+                      value={newCustomer.orders}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, orders: Number(e.target.value) })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                  <div className="space-y-1.5">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest px-1">Initial Spend</label>
+                    <input
+                      type="text"
+                      placeholder="Rs 0"
+                      value={newCustomer.totalSpent}
+                      onChange={(e) => setNewCustomer({ ...newCustomer, totalSpent: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none font-medium"
+                    />
+                  </div>
+                </div>
+
+                {error && <p className="text-xs text-red-500 font-bold px-1">{error}</p>}
+
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={() => setIsPanelOpen(false)}
+                    className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold py-4 rounded-2xl transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAddCustomer}
+                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-black py-4 rounded-2xl transition-all shadow-lg shadow-blue-100"
+                  >
+                    Save Record
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="bg-white/5 rounded-lg p-4 border border-white/10">
-            <div className="text-xs opacity-70 mb-1">Avg Orders/Customer</div>
-            <div className="text-2xl font-bold">
-              {customersData.length > 0 
-                ? (customersData.reduce((sum, c) => sum + c.orders, 0) / customersData.length).toFixed(1)
-                : 0
-              }
-            </div>
-          </div>
-        </div>
+        )}
       </main>
     </div>
   );
@@ -233,4 +290,3 @@ export default function CustomersPage() {
     </DashboardProvider>
   );
 }
-

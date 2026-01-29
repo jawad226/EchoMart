@@ -66,12 +66,13 @@ const BestSellers = () => {
   if (isLoading) return null;
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-50">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-6xl font-extrabold text-slate-900 mb-4 tracking-tight">
             Best Sellers
           </h2>
+          <div className="h-1.5 w-24 bg-blue-600 mx-auto rounded-full"></div>
         </div>
 
         <Swiper
@@ -135,33 +136,33 @@ const BestSellers = () => {
                   </div>
 
                   {/* Product Image */}
-                  <div className="relative w-full h-60 flex justify-center items-center p-6 bg-gray-50 overflow-hidden">
+                  <div className="relative w-full h-60 flex justify-center items-center p-8 bg-slate-50 overflow-hidden">
                     <Image
                       src={product.image}
                       alt={product.title}
-                      width={180}
-                      height={180}
-                      className="object-contain transition-transform duration-500 transform hover:scale-110"
+                      width={200}
+                      height={200}
+                      className="object-contain transition-transform duration-700 transform hover:scale-110 drop-shadow-xl"
                     />
                   </div>
 
                   {/* Product Details */}
-                  <div className="flex flex-col flex-grow p-6 pt-4">
-                    <span className="text-xs text-purple-600 font-medium mb-2 uppercase tracking-wide">
+                  <div className="flex flex-col flex-grow p-6 pt-5">
+                    <span className="text-[10px] text-blue-600 font-extrabold mb-2 uppercase tracking-widest bg-blue-50 w-fit px-2 py-0.5 rounded-md">
                       {product.category}
                     </span>
-                    <h3 className="text-gray-900 font-semibold mb-3 line-clamp-2 group-hover:text-purple-700 transition-colors">
+                    <h3 className="text-slate-900 font-bold mb-3 line-clamp-2 leading-tight group-hover:text-blue-700 transition-colors">
                       {product.title}
                     </h3>
 
-                    <div className="flex items-center justify-between mt-auto">
-                      <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
+                      <div className="flex flex-col">
                         {product.oldPrice && (
-                          <span className="text-gray-400 line-through text-sm">
+                          <span className="text-slate-400 line-through text-xs font-medium">
                             Rs {product.oldPrice.toLocaleString()}
                           </span>
                         )}
-                        <span className="text-2xl font-bold text-gray-900">
+                        <span className="text-xl font-black text-slate-900 leading-none">
                           Rs {product.price.toLocaleString()}
                         </span>
                       </div>
@@ -176,10 +177,10 @@ const BestSellers = () => {
                             category: product.category
                           })
                         }
-                        className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-semibold px-4 py-3 rounded-xl transition-all shadow-lg hover:scale-105"
+                        className="flex items-center gap-2 bg-slate-900 hover:bg-blue-600 text-white font-bold px-5 py-3 rounded-xl transition-all shadow-md group-hover:shadow-blue-200 group-hover:shadow-lg"
                       >
-                        <ShoppingCart size={18} />
-                        <span className="hidden sm:inline">Add</span>
+                        <ShoppingCart size={16} />
+                        <span className="text-sm">Add</span>
                       </button>
                     </div>
                   </div>
@@ -190,9 +191,9 @@ const BestSellers = () => {
         </Swiper>
 
         {/* View All Button */}
-        <div className="text-center mt-12">
-          <button className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white font-bold px-10 py-4 rounded-xl transition-all shadow-lg hover:scale-105">
-            View All Best Sellers
+        <div className="text-center mt-16">
+          <button className="bg-white border-2 border-slate-200 hover:border-blue-600 hover:text-blue-600 text-slate-900 font-black px-12 py-4 rounded-2xl transition-all shadow-sm hover:shadow-xl hover:-translate-y-1">
+            Browse All Products
           </button>
         </div>
       </div>
