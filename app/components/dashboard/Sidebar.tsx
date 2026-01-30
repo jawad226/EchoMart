@@ -48,14 +48,13 @@ export default function Sidebar() {
 
   return (
     <aside className="w-64 bg-white min-h-screen flex flex-col border-r border-slate-200">
-      <div className="p-6 border-b border-slate-50">
+      <div className="p-6">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-blue-200 shadow-lg">
-            E
+          <div className="text-blue-600">
+            <ShoppingBag size={28} strokeWidth={2.5} />
           </div>
           <div>
-            <h1 className="text-lg font-extrabold text-slate-900 leading-tight">Admin</h1>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">ElectroMart</p>
+            <h1 className="text-xl font-black text-slate-900 tracking-tight">EchoMart</h1>
           </div>
         </div>
       </div>

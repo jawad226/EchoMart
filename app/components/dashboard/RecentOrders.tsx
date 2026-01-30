@@ -42,7 +42,7 @@ export default function RecentOrders() {
       <div className="overflow-x-auto">
         <table className="w-full text-left text-sm">
           <thead>
-            <tr className="text-[10px] font-bold text-slate-400 uppercase tracking-widest bg-slate-50/50">
+            <tr className="text-[10px] font-extrabold text-slate-500 uppercase tracking-widest bg-slate-100/50">
               <th className="py-4 px-6">Order ID</th>
               <th className="py-4 px-6">Customer</th>
               <th className="py-4 px-6">Product</th>
