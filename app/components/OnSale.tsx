@@ -53,8 +53,12 @@ const OnSale = () => {
   if (products.length === 0) return null;
 
   return (
-    <section className="py-10 px-6 bg-gray-50 text-center">
-      <h2 className="text-black text-3xl font-bold mb-8">On Sale</h2>
+    <section className="py-12 px-6 bg-white text-center">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col items-center mb-10">
+          <h2 className="text-black-900 text-3xl md:text-4xl font-extrabold">On Sale</h2>
+          <div className="w-20 h-1.5 bg-blue-600 mt-4 rounded-full"></div>
+        </div>
 
       <Swiper
         modules={[Autoplay]}
@@ -70,35 +74,37 @@ const OnSale = () => {
       >
         {products.map((product) => (
           <SwiperSlide key={product.id}>
-            <div className="flex flex-col justify-between rounded-xl shadow-lg hover:shadow-2xl transition relative bg-white p-4 h-full">
+            <div className="group flex flex-col justify-between rounded-2xl border border-gray-100 bg-white p-5 h-full transition-all duration-300 hover:shadow-xl hover:-translate-y-1 relative">
 
               {product.sale && (
-                <span className="absolute top-3 left-3 bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded">
-                  SALE
-                </span>
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="bg-red-600 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-sm">
+                    -{Math.round(((product.oldPrice! - product.price) / product.oldPrice!) * 100)}% OFF
+                  </span>
+                </div>
               )}
 
-              <div className="w-full h-40 flex justify-center items-center mb-4">
+              <div className="w-full h-44 flex justify-center items-center mb-6 overflow-hidden rounded-xl bg-gray-50/50">
                 <Image
                   src={product.image}
                   alt={product.title}
-                  width={150}
-                  height={150}
-                  className="object-contain"
+                  width={160}
+                  height={160}
+                  className="object-contain transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
 
-              <h3 className="text-black text-sm font-medium mb-2 min-h-[40px]">
+              <h3 className="text-gray-800 text-sm font-bold mb-3 min-h-[40px] line-clamp-2 px-2">
                 {product.title}
               </h3>
 
-              <div className="flex justify-center items-center gap-2 mb-4">
+              <div className="flex flex-col items-center gap-1 mb-5">
                 {product.oldPrice && (
-                  <span className="text-gray-400 line-through text-sm">
+                  <span className="text-gray-400 line-through text-xs font-medium">
                     Rs {product.oldPrice.toLocaleString()}
                   </span>
                 )}
-                <span className="text-purple-600 font-semibold">
+                <span className="text-blue-800 text-lg font-black">
                   Rs {product.price.toLocaleString()}
                 </span>
               </div>
@@ -113,7 +119,7 @@ const OnSale = () => {
                     qty: 1,
                   })
                 }
-                className="mt-auto bg-purple-600 hover:bg-purple-700 text-white font-semibold py-2 px-4 rounded-full transition-all shadow-md"
+                className="mt-auto bg-blue-800 hover:bg-blue-900 text-white font-bold py-2.5 px-6 rounded-xl transition-all shadow-md active:scale-95 text-sm"
               >
                 Add to Cart
               </button>
@@ -122,11 +128,14 @@ const OnSale = () => {
         ))}
       </Swiper>
 
-      <Link href="/Sale">
-        <button className="mt-8 bg-purple-600 text-white px-8 py-3 rounded-full hover:bg-purple-700 transition">
-          View All
-        </button>
-      </Link>
+        <div className="mt-12">
+          <Link href="/Sale">
+            <button className="bg-transparent border-2 border-blue-900 text-blue-900 hover:bg-blue-900 hover:text-white px-10 py-3 rounded-xl font-bold transition-all duration-300">
+              View All Offers
+            </button>
+          </Link>
+        </div>
+      </div>
     </section>
   );
 };

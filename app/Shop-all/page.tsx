@@ -144,7 +144,9 @@ export default function ShopAll() {
             {filteredProducts.map(product => (
               <div key={product.id} className="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group overflow-hidden">
                 <div className="relative aspect-square">
-                  <Image src={product.image || "/EarFun.png"} alt={product.name} fill className="object-contain group-hover:scale-105 transition-transform duration-500" />
+                  <div className="absolute inset-8">
+                    <Image src={product.image || "/EarFun.png"} alt={product.name} fill className="object-contain group-hover:scale-105 transition-transform duration-500" />
+                  </div>
                   {product.originalPrice && product.originalPrice > product.price && (
                     <div className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full">
                       SALE

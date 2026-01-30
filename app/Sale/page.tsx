@@ -74,12 +74,14 @@ export default function SalePage() {
 
                 <div className="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 p-4">
                   <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-50 mb-6">
-                    <Image
-                      src={product.image || "/EarFun.png"}
-                      alt={product.name}
-                      fill
-                      className="object-contain group-hover:scale-110 transition-transform duration-700"
-                    />
+                    <div className="absolute inset-8">
+                      <Image
+                        src={product.image || "/EarFun.png"}
+                        alt={product.name}
+                        fill
+                        className="object-contain group-hover:scale-110 transition-transform duration-700"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-4">
